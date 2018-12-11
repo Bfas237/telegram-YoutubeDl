@@ -1,2 +1,3 @@
 pyrogram>=0.8.0
 urbandict>=0.5
+Tgcrypto
