@@ -7,14 +7,7 @@ import threading
 import time
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
-ydl_opts = {
-    'format': 'bestaudio/best',
-    'postprocessors': [{
-        'key': 'FFmpegExtractAudio',
-        'preferredcodec': 'mp3',
-        'preferredquality': '192',
-    }],
-}
+
 def exec_thread(target, *args, **kwargs):
 	t = threading.Thread(target=target, args=args, kwargs=kwargs)
 	t.daemon = True
@@ -54,7 +47,7 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
 	yt = ydl.extract_info(text, download=False)
 	for format in yt['formats']:
-		if format['format_id'] == '140':
+		if format['format_id'] == '140' or format['format_id'] == '192'::
                             fsize = format['filesize']
 	name = yt['title']
 	extname = yt['title']+'.m4a'
@@ -66,11 +59,9 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 		title = name
 	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(title))
 	try:
-		
-		with youtube_dl.YoutubeDL(ydl_opts) as ydls:
-    			ydls.download([text])
+		ydl.extract_info(text, download=True)
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
+		sent = client.send_audio(message.chat.id,open(ydl.prepare_filename(yt), 'rb'),performer=performer,title=title,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
 		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
