@@ -11,7 +11,7 @@ import math
 import requests
 import os
 import json
-from config import configs as config
+from config import Config
 
 from translation import Translation
 
