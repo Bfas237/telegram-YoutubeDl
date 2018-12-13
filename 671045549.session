@@ -1,46 +1,19 @@
 {
-    "user_id": 671045549,
-    "peers_by_username": {
-        "bfaschat": 197005208,
-        "instwelbot": 680982020,
-        "teyima": 407149974,
-        "hanslett": 409257769,
-        "confidence237": 299332645,
-        "gmotherbot": 671045549,
-        "bfas237off": -1001491438824,
-        "viruscypher": 614706218,
-        "handofjesus": 532564516,
-        "bfas237group": -1001112473705,
-        "foven7": 306655146
-    },
-    "peers_by_phone": {},
-    "date": 1544564850,
-    "peers_by_id": {
-        "629458754": -8147776178837801422,
-        "680982020": -3857619526587859345,
-        "299332645": 1434396214576363865,
-        "418856424": -6330677262755857301,
-        "409257769": -2951704699733955620,
-        "306655146": -1831911431121268814,
-        "671045549": -459746262691080985,
-        "393773231": 1285982824448937771,
-        "-1001491438824": -2705899984681611134,
-        "407149974": -634651135271387499,
-        "-1001112473705": -1802842461549394705,
-        "197005208": 779609851298433274,
-        "532564516": -8634869746989587944,
-        "614706218": 3262231953007787961
-    },
     "test_mode": false,
+    "user_id": 671045549,
+    "peers_by_username": {},
+    "peers_by_phone": {},
+    "peers_by_id": {},
     "dc_id": 4,
     "auth_key": [
-        "UAwULUwW7Er6mMfn/PoFN+6lb7D+ZgnHhEkFAFmXesf",
-        "RFuc9muk2T2h3y0uft6PyRoPPtPBT4ZZn6fSQHTjRDE",
-        "W1M06PkrntjGEelpVl1/QiMVI+/QPjHFpRb6oNstB9C",
-        "Ji1BaviRQMf3h94ucFH4S8wHvLTfZ+ekmVnnE/OGBz/",
-        "oxnwXldYOTjxjIMWKKgtrKGiESN5zHPtAsg1v4VlZu9",
-        "Xmm78gmh3q0cskqAqGdRQGz9C8dPvMWi5xFs/g1OKb0",
-        "y5qF6FSIfh0+Wo0p6UHoh7j2jhCKmpOuSD4mdJ/mzhm",
-        "2pXQOgmETWSmqsA+RRy6LUkHjySH6k/CKgscF9rig=="
-    ]
+        "SmzKJwkuteDcOGmwXLuVUKjcD7LBi3cmqIZK9DvFe7x",
+        "6W+ojYa4S2rZ2+UI1hGtRqMG9xes4ymJNhjLDpoMG/l",
+        "SMK5bLqTOlsNFcNyvsXLaOlKiSJxu7Hioy+cBTnbtkR",
+        "CvhrTxdsPxSsbi+RrtPR//e8WSrtsAQRLFiMZoL7sEw",
+        "otdQ/WeUzTv1vVU7yZy5rTDhrz1hTzmy4JMoKNrbNOg",
+        "qfbwof+R/HU+dcdje0D/R/ZIiZukJ/aA13UVv6bE6bn",
+        "yaQpHjMwUhmMg/q8/vX8eylLhs16FodbZz+i/sas8aJ",
+        "dAjerFTY4Jvlr0nta5vJ7XWWcy46dWE80iiXE2Rvw=="
+    ],
+    "date": 1544695499
 }
