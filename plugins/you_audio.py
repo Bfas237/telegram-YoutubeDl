@@ -64,7 +64,6 @@ def dld(message, client, sent_id, text, msg_id,nome):
 	t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
 	x_reponse = t_response.decode("UTF-8")
 	response_json = json.loads(x_reponse)
-	logger.info(response_json)
 	inline_keyboard = []
 	for formats in response_json["formats"]:
 		format_id = formats["format_id"]
