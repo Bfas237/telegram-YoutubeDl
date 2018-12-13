@@ -98,7 +98,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
                     text=FORMAT_SELECTION.format(thumbnail),
                     reply_markup=reply_markup,
                     parse_mode=pyrogram.ParseMode.HTML,
-                    reply_to_message_id=update.message_id
+                    reply_to_message_id=msg_id
                 )
 	try:
 		
