@@ -1,7 +1,7 @@
 # Description
 A Peer-to-Peer {Telegram](https://core.telegram.org/bots) Module with multi-functional capabilities ......
 
-# Installation
+## Installation
 - Install Pyrogram
 `pip3 install --upgrade pyrogram[tgcrypto]`
 - Clone my repo
