@@ -1,9 +1,4 @@
 pyrogram
-bs4
-colorama
-requests
-aioify
-instantmusic
 youtube-dl
 pexpect
 wget
@@ -24,5 +19,4 @@ hurry.filesize
 pget 
 aiohttp
 python-magic
-
 Tgcrypto
