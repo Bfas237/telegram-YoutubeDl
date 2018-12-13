@@ -64,6 +64,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
 	t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
 	x_reponse = t_response.decode("UTF-8")
 	response_json = json.loads(x_reponse)
+	 ytitle = response_json["title"]
 	inline_keyboard = []
 	for formats in response_json["formats"]:
 		format_id = formats["format_id"]
@@ -86,7 +87,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
 		thumbnail_image = "https://placehold.it/50x50"
 	if "thumbnail" in response_json:
 		response_json["thumbnail"]
-	thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".jpg")
+	thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg")
 	client.send_message(
                     message.chat.id,
                     text=FORMAT_SELECTION.format(thumbnail),
