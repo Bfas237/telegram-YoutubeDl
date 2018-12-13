@@ -63,6 +63,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
 	if not os.path.isdir(Config.DOWNLOAD_LOCATION):
 		os.makedirs(Config.DOWNLOAD_LOCATION)
 	t1 = time.time()
+	youtube_dl_url = text
 	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
 	FORMAT_SELECTION = "Downloading the song in mp3 format <a href='{}'>With the best Quality</a>"
 	command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
@@ -98,7 +99,6 @@ def dld(message, client, sent_id, text, msg_id,nome):
 	try:
 		youtube_dl_format = "0"
 		youtube_dl_ext = "mp3"
-    		youtube_dl_url = text
     		thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
 		sentid = client.send_message(
 			chat_id=chat_id,
