@@ -181,7 +181,7 @@ def button(bot, update):
     download_directory = ""
     command_to_exec = []
     if "mp3" in youtube_dl_ext:
-        download_directory = Config.DOWNLOAD_LOCATION + "/" ytitle "_" + youtube_dl_format + "." + youtube_dl_ext + ""
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
         command_to_exec = [
             "youtube-dl",
             "--extract-audio",
@@ -191,7 +191,7 @@ def button(bot, update):
             "-o", download_directory
         ]
     else:
-        download_directory = Config.DOWNLOAD_LOCATION + "/" ytitle "_" + youtube_dl_format + "." + youtube_dl_ext + ".mp4"
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ".mp4"
         # command_to_exec = ["youtube-dl", "-f", youtube_dl_format, "--hls-prefer-ffmpeg", "--recode-video", "mp4", "-k", youtube_dl_url, "-o", download_directory]
         command_to_exec = [
             "youtube-dl",
