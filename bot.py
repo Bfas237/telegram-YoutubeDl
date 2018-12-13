@@ -32,9 +32,8 @@ def TRChatBase(chat_id, message_text, intent):
               intent=intent)
     resp = msg.send()
 
-
 import pyrogram
-
+from pyrogram import Client, Filters
 APP_FOLDER = os.path.dirname(os.path.realpath(__file__))
 TMP_FOLDER = os.path.join(APP_FOLDER, 'tmp')
 
