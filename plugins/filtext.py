@@ -29,7 +29,7 @@ user_id = config.user_id
 prefix = config.prefix
 
 if config.language == "english":
-    from languages.english import fetching_download_link, download_job_started, download_successfull, upload_job_started, no_result_found  
+    from languages.english import fetching_download_link, download_job_started, download_successfull, upload_job_started
 def exec_thread(target, *args, **kwargs):
 	t = threading.Thread(target=target, args=args, kwargs=kwargs)
 	t.daemon = True
