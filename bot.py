@@ -166,17 +166,22 @@ def button(bot, update):
         return ""
     youtube_dl_format, youtube_dl_ext = update.data.split(":")
     youtube_dl_url = update.message.reply_to_message.text
+    commandd = ["youtube-dl", "--no-warnings", "-j", youtube_dl_url]
+    t_r = subprocess.check_output(commandd, stderr=subprocess.STDOUT)
+    x_r = t_r.decode("UTF-8")
+    r_j = json.loads(x_r)
+    ytitle = r_j["title"]
     thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".jpg"
     bot.edit_message_text(
         text=Translation.DOWNLOAD_START,
         chat_id=update.from_user.id,
         message_id=update.message.message_id
     )
-    description = " " + " \r\n© @AnyDLBot"
+    description = " " + " \r\n© @Bfas237Bots"
     download_directory = ""
     command_to_exec = []
     if "mp3" in youtube_dl_ext:
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
+        download_directory = Config.DOWNLOAD_LOCATION + "/" ytitle "_" + youtube_dl_format + "." + youtube_dl_ext + ""
         command_to_exec = [
             "youtube-dl",
             "--extract-audio",
@@ -186,7 +191,7 @@ def button(bot, update):
             "-o", download_directory
         ]
     else:
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + "_" + youtube_dl_format + "." + youtube_dl_ext + ".mp4"
+        download_directory = Config.DOWNLOAD_LOCATION + "/" ytitle "_" + youtube_dl_format + "." + youtube_dl_ext + ".mp4"
         # command_to_exec = ["youtube-dl", "-f", youtube_dl_format, "--hls-prefer-ffmpeg", "--recode-video", "mp4", "-k", youtube_dl_url, "-o", download_directory]
         command_to_exec = [
             "youtube-dl",
@@ -229,8 +234,8 @@ def button(bot, update):
                     audio=download_directory,
                     caption=description,
                     # duration=response_json["duration"],
-                    # performer=response_json["uploader"],
-                    # title=response_json["title"],
+                    #performer=response_json["uploader"],
+                    title=ytitle,
                     # reply_markup=reply_markup,
                     thumb=thumb_image_path,
                     reply_to_message_id=update.message.reply_to_message.message_id
@@ -241,8 +246,8 @@ def button(bot, update):
                     video=download_directory,
                     caption=description,
                     # duration=response_json["duration"],
-                    # width=response_json["width"],
-                    # height=response_json["height"],
+                    #width=response_json["width"],
+                    #height=response_json["height"],
                     supports_streaming=True,
                     # reply_markup=reply_markup,
                     thumb=thumb_image_path,
