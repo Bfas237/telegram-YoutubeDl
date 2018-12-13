@@ -11,7 +11,7 @@ import math
 import requests
 import os
 import json
-
+from config import configs as config
 
 from translation import Translation
 
@@ -270,8 +270,8 @@ def button(bot, update):
 
 if __name__ == "__main__" :
     # create download directory, if not exist
-    if not os.path.isdir(DOWNLOAD_LOCATION):
-        os.makedirs(DOWNLOAD_LOCATION)
+    if not os.path.isdir(Config.DOWNLOAD_LOCATION):
+        os.makedirs(Config.DOWNLOAD_LOCATION)
     app = config.app
     app.add_handler(pyrogram.MessageHandler(start, pyrogram.Filters.command(["start"])))
     app.add_handler(pyrogram.MessageHandler(echo, pyrogram.Filters.text))
