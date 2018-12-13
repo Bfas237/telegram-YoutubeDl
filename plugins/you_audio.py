@@ -40,7 +40,7 @@ def search_query_yt(query):
 			pass
 	dic = {'bot_api_yt':list_videos}
 	return dic
-ydlq = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
+ydlq = youtube_dl.YoutubeDL({'outtmpl': '%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 
 
 def pretty_size(size):
@@ -67,8 +67,8 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(title))
 	try:
 		
-		with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-    			ydl.download([text])
+		with youtube_dl.YoutubeDL(ydl_opts) as ydls:
+    			ydls.download([text])
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
 		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
