@@ -40,7 +40,7 @@ def search_query_yt(query):
 			pass
 	dic = {'bot_api_yt':list_videos}
 	return dic
-ydlq = youtube_dl.YoutubeDL({'outtmpl': '%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
+ydl = youtube_dl.YoutubeDL({'outtmpl': '%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 
 
 def pretty_size(size):
