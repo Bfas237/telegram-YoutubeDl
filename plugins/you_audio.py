@@ -24,6 +24,8 @@ def DownLoadFile(url, file_name):
 
     # create download directory, if not exist
 
+if not os.path.isdir(Config.DOWNLOAD_LOCATION):
+	os.makedirs(Config.DOWNLOAD_LOCATION)
 from translation import Translation
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
@@ -60,8 +62,6 @@ def search_query_yt(query):
 	return dic
 
 def dld(message, client, sent_id, text, msg_id,nome):
-	if not os.path.isdir(Config.DOWNLOAD_LOCATION):
-		os.makedirs(Config.DOWNLOAD_LOCATION)
 	t1 = time.time()
 	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
 	FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a>"
