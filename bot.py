@@ -305,6 +305,7 @@ class Handlers:
     @staticmethod
     def command_start(bot, update):
         global active_chats
+        TRChatBase(update.from_user.id, update.text, "/start")
         active_chats[update.message.chat_id] = {'actions': []}
 
         slow_mode_warning = "I'm running in <i>Slow Mode</i>\n\n" if SLOW_MODE else ""
