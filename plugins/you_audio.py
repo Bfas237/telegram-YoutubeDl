@@ -95,7 +95,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
 		sentid = client.send_message(chat_id=chat_id, Translation.DOWNLOAD_START, parse_mode='Markdown', reply_to_message_id=msg_id).message_id
 		message.delete(sentid)
 		description = " " + " \r\n© @Bfas237Bots"
-    		download_directory = ""
+		download_directory = " "
 		download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
 		command_to_exec = ["youtube-dl", "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
 		if ' - ' in ytitle:
