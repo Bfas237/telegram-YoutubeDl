@@ -104,11 +104,10 @@ def echo(bot, update):
         action="typing"
     )
     text = update.text
-    if(text.startswith("http")):
-        if 'youtu.be' not in text and 'youtube.com' not in text:
-            url = search_yt(text)[0]['url']
-            else:
-                url = text
+    if 'youtu.be' not in text and 'youtube.com' not in text:
+        url = search_yt(text)[0]['url']
+    elif(text.startswith("http")):
+        url = text
         if "noyes.in" not in url:
             try:
                 command_to_exec = ["youtube-dl", "--no-warnings", "-j", url]
