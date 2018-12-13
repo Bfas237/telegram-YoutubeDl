@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import requests
 import subprocess
 import os
@@ -6,7 +7,14 @@ import threading
 import time
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
-
+ydl_opts = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '192',
+    }],
+}
 def exec_thread(target, *args, **kwargs):
 	t = threading.Thread(target=target, args=args, kwargs=kwargs)
 	t.daemon = True
@@ -32,7 +40,7 @@ def search_query_yt(query):
 			pass
 	dic = {'bot_api_yt':list_videos}
 	return dic
-ydl = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
+ydlq = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 
 
 def pretty_size(size):
@@ -58,9 +66,11 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 		title = name
 	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(title))
 	try:
-		ydl.extract_info(text, download=True)
+		
+		with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+    			ydl.download([text])
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-		sent = client.send_document(message.chat.id,open(ydl.prepare_filename(yt), 'rb'),caption=nome,reply_to_message_id=msg_id).message_id
+		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
 		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
