@@ -4,7 +4,7 @@ from pyrogram import Client
 import os
 api_id = 256406
 api_hash = "31fd969547209e7c7e23ef97b7a53c37"
-class Configs(object):
+class Config(object):
     # get a token from https://chatbase.com
     CHAT_BASE_TOKEN = os.environ.get("CHAT_BASE_TOKEN", "880f05a1-685c-4909-a8f6-b17463625eba")
     # get a token from @BotFather
