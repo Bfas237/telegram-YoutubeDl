@@ -40,7 +40,7 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 		re.append(i)
 	for i in re:
 		if '[download] ' in i:
-			if '.mp4' in i or '.webm' in i:
+			if '.m4a' in i or '.mp3' in i:
 				title = i
 	title = title.replace('[download] ','')
 	if ' has already been downloaded' in title:
