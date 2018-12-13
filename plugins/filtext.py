@@ -80,9 +80,9 @@ def get_filename_from_cd(cd):
 
 @app.on_message(Filters.text & Filters.chat("bfas237off"))
 def move(client, message):
-  if message.text.startswith('/ytdl') or message.text.startswith('!ytdl'):
+  if message.text.startswith('/fkdlfjfrhr') or message.text.startswith('!dddffss'):
       exec_thread(youtube.ytdlv,message,client)
-  if message.text.startswith('/dl') or message.text.startswith('!dl'):
+  if message.text.startswith('/apk') or message.text.startswith('!apk'):
       first_time = time.time()
       word = message.text[4:]
       search = " ".join(word)
