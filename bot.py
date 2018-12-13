@@ -292,7 +292,6 @@ class Handlers:
                          reply_markup=reply_markup)
 
     @staticmethod
-    @restricted
     def command_chats(bot, update):
         update.message.reply_text("Chats: {}".format(json.dumps(active_chats)))
 
