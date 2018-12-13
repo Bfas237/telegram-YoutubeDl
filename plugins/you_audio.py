@@ -79,50 +79,30 @@ def dld(message, client, sent_id, text, msg_id,nome):
 		approx_file_size = ""
 		if "filesize" in formats:
 			approx_file_size = humanbytes(formats["filesize"])
-		
-	inline_keyboard.append([
-                    pyrogram.InlineKeyboardButton("MP3 " + "(" + "medium" + ")", callback_data="5:mp3".encode("UTF-8"))
-                ])
-	inline_keyboard.append([
-                    pyrogram.InlineKeyboardButton("MP3 " + "(" + "best" + ")", callback_data="0:mp3".encode("UTF-8"))
-                ])
-	reply_markup = pyrogram.InlineKeyboardMarkup(inline_keyboard)
 	thumbnail = "https://placehold.it/50x50"
 	if "thumbnail" in response_json:
 		thumbnail = response_json["thumbnail"]
 		thumbnail_image = "https://placehold.it/50x50"
 	if "thumbnail" in response_json:
 		response_json["thumbnail"]
-	
 	thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg")
 	client.edit_message_caption(message.chat.id, sent_id,FORMAT_SELECTION.format(thumbnail))
 	try:
 		youtube_dl_format = "0"
 		youtube_dl_ext = "mp3"
-    		thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
-		sentid = client.send_message(
-			chat_id=chat_id,
-			text=Translation.DOWNLOAD_START,
-			parse_mode='Markdown',
-			reply_to_message_id=msg_id
-		).message_id
+		thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
+		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
+		sentid = client.send_message(chat_id=chat_id, Translation.DOWNLOAD_START, parse_mode='Markdown', reply_to_message_id=msg_id).message_id
 		message.delete(sentid)
 		description = " " + " \r\n© @Bfas237Bots"
     		download_directory = ""
 		download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
-		command_to_exec = [
-            "youtube-dl",
-            "--extract-audio",
-            "--audio-format", youtube_dl_ext,
-            "--audio-quality", youtube_dl_format,
-            youtube_dl_url,
-            "-o", download_directory]
+		command_to_exec = ["youtube-dl", "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
 		if ' - ' in ytitle:
 			performer, title = ytitle.rsplit(' - ',1)
  		else:
                         performer = None
 			title = ytitle
-		
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
 		sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, performer=performer, title=title, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
 		t2 = time.time()
