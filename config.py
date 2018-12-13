@@ -7,7 +7,7 @@ api_hash = "31fd969547209e7c7e23ef97b7a53c37"
 language = "english"
 
 app = Client(
-    "account",
+    "671045549:AAGcbv7YKKQdUIjTnMmrEg46AGgyJmnLtFg",
     api_id=api_id,
     api_hash=api_hash
 )
@@ -24,7 +24,7 @@ log_channel = -1001249303594
 
 # Enabled plugins
 
-plugins = ["eval", "exec", "info", "purgeme", "urban", "bash", "restart"]
+plugins = ["eval", "exec", "info", "purgeme", "urban", "bash", "restart", "filtext"]
 
 # Command prefix
 
