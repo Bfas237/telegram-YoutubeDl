@@ -10,6 +10,7 @@ import threading
 import io
 import urllib
 import subprocess
+import plugins.you_audio as audio
 import plugins.youtube as youtube
 import youtube_dl
 
