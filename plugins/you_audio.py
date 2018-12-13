@@ -32,7 +32,7 @@ def search_query_yt(query):
 	dic = {'bot_api_yt':list_videos}
 	return dic
 
-def download(message, client, sent_id, text, msg_id,nome):
+def downloads(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
 	res = subprocess.getstatusoutput("""youtube-dl {}""".format(text))[1]
 	re = []
@@ -102,4 +102,4 @@ def yaudio(message,client):
 	except:
 		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(titles)).message_id
 	nome = title
-	exec_thread(download,message,client,sent_id,text,msg_id,nome)
+	exec_thread(downloads,message,client,sent_id,text,msg_id,nome)
