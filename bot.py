@@ -37,11 +37,9 @@ import pyrogram
 
 APP_FOLDER = os.path.dirname(os.path.realpath(__file__))
 TMP_FOLDER = os.path.join(APP_FOLDER, 'tmp')
-with open(os.path.join(APP_FOLDER, 'token.secret'), 'r') as tokenfile:
-    TOKEN = tokenfile.readline()
 
 BANNED = ()
-ADMINS = tuple(open(os.path.join(APP_FOLDER, 'admins.secret'), 'r'))  # Be careful: tuple fills by str
+
 
 active_chats = {
 }
