@@ -98,8 +98,8 @@ def ytdlv(message,client):
 	client.delete_messages(message.chat.id, sent_id)
 	print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
 	try:
-		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
+		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(titles)).message_id
 	except:
-		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(title)).message_id
+		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(titles)).message_id
 	nome = title
 	exec_thread(download,message,client,sent_id,text,msg_id,nome)
