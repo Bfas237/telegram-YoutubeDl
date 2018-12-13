@@ -31,38 +31,35 @@ def search_query_yt(query):
 			pass
 	dic = {'bot_api_yt':list_videos}
 	return dic
+ydl = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 
+
+def pretty_size(size):
+    units = ['B', 'KB', 'MB', 'GB']
+    unit = 0
+    while size >= 1024:
+        size /= 1024
+        unit += 1
+    return '%0.2f %s' % (size, units[unit])
 def ydownload(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
-	res = subprocess.getstatusoutput("""youtube-dl {}""".format(text))[1]
-	re = []
-	for	i in res.split('\n'):
-		re.append(i)
-	for i in re:
-		if '[download] ' in i:
-			if '.m4a' in i or '.mp3' in i:
-				title = i
-				print(title)
-				title = title.replace('[download] ','')
-				if ' has already been downloaded' in title:
-					title = title.replace(' has already been downloaded','')
-					if 'Destination: ' in title:
-						title = title.replace('Destination: ','')
-	for format in re['formats']:
+	yt = ydl.extract_info(text, download=False)
+	for format in yt['formats']:
 		if format['format_id'] == '140':
                             fsize = format['filesize']
-	title = re['title']
-	extname = re['title']+'.m4a'
+	title = yt['title']
+	extname = yt['title']+'.m4a'
 	print(title)
-			
-	print(title)
-	a = re[0]
-	print(a)
-	number = '-'+a.replace('[youtube] ','').replace(': Downloading webpage','')
-	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(nome))
+	if ' - ' in name:
+		performer, title = name.rsplit(' - ',1)
+	else:
+		performer = None
+		title = name
+	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(title))
 	try:
+		ydl.extract_info(text, download=True)
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
+		sent = client.send_document(message.chat.id,open(ydl.prepare_filename(yt), 'rb'),caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
 		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
