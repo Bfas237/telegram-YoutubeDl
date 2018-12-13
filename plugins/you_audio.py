@@ -57,7 +57,7 @@ def search_query_yt(query):
 def dld(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
 	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
-	FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a>
+	FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a>"
 	command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
 	t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
 	x_reponse = t_response.decode("UTF-8")
