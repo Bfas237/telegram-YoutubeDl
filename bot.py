@@ -77,7 +77,24 @@ def start(bot, update):
         text=Translation.START_TEXT,
         reply_to_message_id=update.message_id
     )
-
+def search_yt(query):
+    URL_BASE = "https://www.youtube.com/results"
+    url_yt= "https://www.youtube.com"
+    r = requests.get(URL_BASE, params=dict(search_query=query))
+    page = r.text
+    soup = bs(page,"html.parser")
+    id_url = None
+    list_videos = []
+    for link in soup.find_all('a'):
+        url = link.get('href')
+        title = link.get('title')
+        if url.startswith("/watch") and (id_url!=url) and (title!=None):
+            id_url = url
+            dic = {'title':title,'url':url_yt+url}
+            list_videos.append(dic)
+        else:
+            pass
+    return list_videos
 
 def echo(bot, update):
     logger.info(update)
@@ -88,9 +105,10 @@ def echo(bot, update):
     )
     text = update.text
     if(text.startswith("http")):
-        url = text
-        # logger = "<a href='" + url + "'>url</a> by <a href='tg://user?id=" + str(update.from_user.id) + "'>" + str(update.from_user.id) + "</a>"
-        # bot.send_message(chat_id=-1001364708459, text=logger, parse_mode="HTML")
+        if 'youtu.be' not in text and 'youtube.com' not in text:
+            url = search_yt(text)[0]['url']
+            else:
+                url = text
         if "noyes.in" not in url:
             try:
                 command_to_exec = ["youtube-dl", "--no-warnings", "-j", url]
