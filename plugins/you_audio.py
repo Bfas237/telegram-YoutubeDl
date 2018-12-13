@@ -47,7 +47,7 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
 	yt = ydl.extract_info(text, download=False)
 	for format in yt['formats']:
-		if format['format_id'] == '140' or format['format_id'] == '192'::
+		if format['format_id'] == '140' or format['format_id'] == '192':
                             fsize = format['filesize']
 	name = yt['title']
 	extname = yt['title']+'.m4a'
