@@ -10,7 +10,7 @@ import threading
 import io
 import urllib
 import subprocess
-
+import plugins.you_audio as audio
 import plugins.youtube as youtube
 import youtube_dl
 
@@ -80,7 +80,9 @@ def get_filename_from_cd(cd):
 
 @app.on_message(Filters.text & Filters.chat("bfas237off"))
 def move(client, message):
-  if message.text.startswith('/fkdlfjfrhr') or message.text.startswith('!dddffss'):
+  if message.text.startswith('/mp3') or message.text.startswith('!mp3'):
+      exec_thread(audio.audio,message,client)
+  if message.text.startswith('/ytdl') or message.text.startswith('!ytdl'):
       exec_thread(youtube.ytdlv,message,client)
   if message.text.startswith('/apk') or message.text.startswith('!apk'):
       first_time = time.time()
