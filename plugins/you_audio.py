@@ -1,17 +1,37 @@
-from __future__ import unicode_literals
 import requests
 import subprocess
 import os
-import youtube_dl
 import threading
 import time
+from config import Config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
-
+import pyrogram
 def exec_thread(target, *args, **kwargs):
 	t = threading.Thread(target=target, args=args, kwargs=kwargs)
 	t.daemon = True
 	t.start()
+def DownLoadFile(url, file_name):
+    if not os.path.exists(file_name):
+        r = requests.get(url, allow_redirects=True, stream=True)
+        with open(file_name, 'wb') as fd:
+            for chunk in r.iter_content(chunk_size=Config.CHUNK_SIZE):
+                fd.write(chunk)
+    return file_name
+
+
+def humanbytes(size):
+    # https://stackoverflow.com/a/49361727/4723940
+    #2**10 = 1024
+    if not size:
+      return ""
+    power = 2**10
+    n = 0
+    Dic_powerN = {0 : ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
+    while size > power:
+        size /=  power
+        n += 1
+    return str(math.floor(size)) + " " + Dic_powerN[n] + 'B'
 
 def search_query_yt(query):
 	URL_BASE = "https://www.youtube.com/results?search_query=%s"%(query)
@@ -33,35 +53,50 @@ def search_query_yt(query):
 			pass
 	dic = {'bot_api_yt':list_videos}
 	return dic
-ydl = youtube_dl.YoutubeDL({'outtmpl': '%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 
-
-def pretty_size(size):
-    units = ['B', 'KB', 'MB', 'GB']
-    unit = 0
-    while size >= 1024:
-        size /= 1024
-        unit += 1
-    return '%0.2f %s' % (size, units[unit])
-def ydownload(message, client, sent_id, text, msg_id,nome):
+def dld(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
-	yt = ydl.extract_info(text, download=False)
-	for format in yt['formats']:
-		if format['format_id'] == '140' or format['format_id'] == '192':
-                            fsize = format['filesize']
-	name = yt['title']
-	extname = yt['title']+'.m4a'
-	print(name)
-	if ' - ' in name:
-		performer, title = name.rsplit(' - ',1)
-	else:
-		performer = None
-		title = name
-	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(title))
+	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
+	FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a>
+	command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
+	t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
+	x_reponse = t_response.decode("UTF-8")
+	response_json = json.loads(x_reponse)
+	logger.info(response_json)
+	inline_keyboard = []
+	for formats in response_json["formats"]:
+		format_id = formats["format_id"]
+		format_string = formats["format"]
+		format_ext = formats["ext"]
+		approx_file_size = ""
+		if "filesize" in formats:
+			approx_file_size = humanbytes(formats["filesize"])
+		
+	inline_keyboard.append([
+                    pyrogram.InlineKeyboardButton("MP3 " + "(" + "medium" + ")", callback_data="5:mp3".encode("UTF-8"))
+                ])
+	inline_keyboard.append([
+                    pyrogram.InlineKeyboardButton("MP3 " + "(" + "best" + ")", callback_data="0:mp3".encode("UTF-8"))
+                ])
+	reply_markup = pyrogram.InlineKeyboardMarkup(inline_keyboard)
+	thumbnail = "https://placehold.it/50x50"
+	if "thumbnail" in response_json:
+		thumbnail = response_json["thumbnail"]
+		thumbnail_image = "https://placehold.it/50x50"
+	if "thumbnail" in response_json:
+		response_json["thumbnail"]
+	thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".jpg")
+	client.send_message(
+                    message.chat.id,
+                    text=FORMAT_SELECTION.format(thumbnail),
+                    reply_markup=reply_markup,
+                    parse_mode=pyrogram.ParseMode.HTML,
+                    reply_to_message_id=update.message_id
+                )
 	try:
-		ydl.extract_info(text, download=True)
-		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-		sent = client.send_audio(message.chat.id,open(ydl.prepare_filename(yt), 'rb'),performer=performer,title=title,reply_to_message_id=msg_id).message_id
+		
+		client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
+		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
 		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
@@ -71,7 +106,7 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 	client.send_chat_action(message.chat.id,'CANCEL')
 	os.remove(title)
 
-def yaudio(message,client):
+def audio(message,client):
 	text = message.text[6:]
 	chat_id = message.chat.id
 	msg_id = message.message_id
@@ -109,4 +144,4 @@ def yaudio(message,client):
 	except:
 		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(title)).message_id
 	nome = title
-	exec_thread(ydownload,message,client,sent_id,text,msg_id,nome)
+	exec_thread(dld,message,client,sent_id,text,msg_id,nome)
