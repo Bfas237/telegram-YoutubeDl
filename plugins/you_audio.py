@@ -101,5 +101,5 @@ def yaudio(message,client):
 		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(titles)).message_id
 	except:
 		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(titles)).message_id
-	nome = title
+	nome = titles
 	exec_thread(downloads,message,client,sent_id,text,msg_id,nome)
