@@ -48,9 +48,9 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 	for format in yt['formats']:
 		if format['format_id'] == '140':
                             fsize = format['filesize']
-	title = yt['title']
+	name = yt['title']
 	extname = yt['title']+'.m4a'
-	print(title)
+	print(name)
 	if ' - ' in name:
 		performer, title = name.rsplit(' - ',1)
 	else:
