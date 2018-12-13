@@ -22,10 +22,10 @@ def search_query_yt(query):
 	list_videos = []
 	for link in soup.find_all('a'):
 		url = link.get('href')
-		title = link.get('title')
-		if url.startswith("/watch") and (id_url!=url) and (title!=None):
+		titles = link.get('title')
+		if url.startswith("/watch") and (id_url!=url) and (titles!=None):
 			id_url = url
-			dic = {'title':title,'url':url_yt+url}
+			dic = {'title':titles,'url':url_yt+url}
 			list_videos.append(dic)
 		else:
 			pass
@@ -41,20 +41,20 @@ def download(message, client, sent_id, text, msg_id,nome):
 	for i in re:
 		if '[download] ' in i:
 			if '.m4a' in i:
-				title = i
-	title = title.replace('[download] ','')
-	if ' has already been downloaded' in title:
-		title = title.replace(' has already been downloaded','')
-	if 'Destination: ' in title:
-		title = title.replace('Destination: ','')
-	print(title)
+				titles = i
+	titles = titles.replace('[download] ','')
+	if ' has already been downloaded' in titles:
+		titles = titles.replace(' has already been downloaded','')
+	if 'Destination: ' in titles:
+		titles = titles.replace('Destination: ','')
+	print(titles)
 	a = re[0]
 	print(a)
 	number = '-'+a.replace('[youtube] ','').replace(': Downloading webpage','')
 	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(nome))
 	try:
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
+		sent = client.send_document(message.chat.id,titles,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
 		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
@@ -82,7 +82,7 @@ def ytdlv(message,client):
 			reply_to_message_id=msg_id
 		).message_id
 		a = search_query_yt(text)
-		title = a['bot_api_yt'][0]['title']
+		titles = a['bot_api_yt'][0]['title']
 		thumb = a['bot_api_yt'][0]['url'].split('v=')[1]
 	else:
 		sent_id = client.send_message(
@@ -93,7 +93,7 @@ def ytdlv(message,client):
 		).message_id
 		a = search_query_yt(text)
 		text = a['bot_api_yt'][0]['url']
-		title = a['bot_api_yt'][0]['title']
+		titles = a['bot_api_yt'][0]['title']
 		thumb = text.split('v=')[1]
 	client.delete_messages(message.chat.id, sent_id)
 	print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
