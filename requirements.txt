@@ -20,4 +20,3 @@ pget
 aiohttp
 python-magic
 Tgcrypto
-libav-tools
