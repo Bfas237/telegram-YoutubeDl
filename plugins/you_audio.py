@@ -64,7 +64,7 @@ def download(message, client, sent_id, text, msg_id,nome):
 	client.send_chat_action(message.chat.id,'CANCEL')
 	os.remove(title)
 
-def ytdlv(message,client):
+def yaudio(message,client):
 	text = message.text[6:]
 	chat_id = message.chat.id
 	msg_id = message.message_id
