@@ -42,6 +42,7 @@ def ydownload(message, client, sent_id, text, msg_id,nome):
 		if '[download] ' in i:
 			if '.m4a' in i or '.mp3' in i:
 				title = i
+				print(title)
 	title = title.replace('[download] ','')
 	if ' has already been downloaded' in title:
 		title = title.replace(' has already been downloaded','')
