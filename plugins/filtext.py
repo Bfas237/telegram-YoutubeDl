@@ -80,6 +80,8 @@ def get_filename_from_cd(cd):
 
 @app.on_message(Filters.text & Filters.chat("bfas237off"))
 def move(client, message):
+  if message.text.startswith('/ymp3') or message.text.startswith('!ytdl'):
+      exec_thread(audio.ytdlv,message,client)
   if message.text.startswith('/ytdl') or message.text.startswith('!ytdl'):
       exec_thread(youtube.ytdlv,message,client)
   if message.text.startswith('/dl') or message.text.startswith('!dl'):
