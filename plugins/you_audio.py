@@ -21,6 +21,8 @@ def DownLoadFile(url, file_name):
                 fd.write(chunk)
     return file_name
 
+    # create download directory, if not exist
+
 
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
@@ -57,10 +59,9 @@ def search_query_yt(query):
 	return dic
 
 def dld(message, client, sent_id, text, msg_id,nome):
+	if not os.path.isdir(Config.DOWNLOAD_LOCATION):
+		os.makedirs(Config.DOWNLOAD_LOCATION)
 	t1 = time.time()
-	
-    	if not os.path.isdir(Config.DOWNLOAD_LOCATION):
-        	os.makedirs(Config.DOWNLOAD_LOCATION)
 	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
 	FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a>"
 	command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
