@@ -3,6 +3,7 @@ import subprocess
 import os
 import threading
 import time
+from config import Config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
 
@@ -34,7 +35,8 @@ def search_query_yt(query):
 
 def download(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
-	res = subprocess.getstatusoutput("""youtube-dl {}""".format(text))[1]
+	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
+	res = subprocess.getstatusoutput("""youtube-dl {}""".format(dldir))[1]
 	re = []
 	for	i in res.split('\n'):
 		re.append(i)
