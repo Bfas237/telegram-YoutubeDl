@@ -91,9 +91,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
         youtube_dl_format = "0"
         youtube_dl_ext = "mp3"
         thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
-        client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
-        sentid = client.send_message(chat_id=chat_id, text='Downloading Your video in mp3...', parse_mode='Markdown', reply_to_message_id=msg_id).message_id
-        message.delete(sentid)
+        client.edit_message_caption(message.chat.id,sent_id,caption='Downloading Your video in mp3...', parse_mode='Markdown')
         description = " " + " \r\n© @Bfas237Bots"
         download_directory = " "
         download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
@@ -101,10 +99,13 @@ def dld(message, client, sent_id, text, msg_id,nome):
         finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
         time.sleep(5)
         client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
+        client.edit_message_caption(message.chat.id,sent_id,caption='Uploading your song to telegram in progress', parse_mode='Markdown')
+        time.sleep(5)
+        message.delete(sent_id)
         sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
         t2 = time.time()
         client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(description,str(int(t2-t1))))
-        client.delete_messages(message.chat.id, sent_id)
+        #client.delete_messages(message.chat.id, sent_id)
     except subprocess.CalledProcessError as exc:
         client.edit_message_caption(message.chat.id, sent_id,'Could not send the mp3 file with error: \n\n**{}**'.format(exc))
         print(exc)
