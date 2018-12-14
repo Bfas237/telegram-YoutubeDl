@@ -103,7 +103,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
-        sent = client.send_document(message.chat.id, download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
+        sent = client.send_document(message.chat.id, download_directory, caption=description, reply_to_message_id=msg_id).message_id
         t2 = time.time()
         client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
         time.sleep(3)
