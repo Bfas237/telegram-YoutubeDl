@@ -52,7 +52,7 @@ def download(message, client, sent_id, text, msg_id,nome):
 	a = re[0]
 	print(a)
 	number = '-'+a.replace('[youtube] ','').replace(': Downloading webpage','')
-``	client.edit_message_caption(message.chat.id, sent_id,'**Uploading `{}` to telegram in progress**'.format(nome))
+	client.edit_message_caption(message.chat.id, sent_id,'**Uploading `{}` to telegram in progress**'.format(nome))
 	time.sleep(5)
 	try:
 		client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
@@ -78,35 +78,38 @@ def ytdlv(message,client):
 	if text == '':
 		client.send_message(
 			chat_id=chat_id,
-			text='Uso: /ytdl URL do vídeo ou nome',
+			text='**Usage:** `!ytdl URL do vídeo ou nome`',
 			reply_to_message_id=msg_id
 		)
 	elif 'youtu.be' in text or 'youtube.com' in text:
 		sent_id = client.send_message(
 			chat_id=chat_id,
-			text='Obtendo informações do vídeo...',
+			text='⏳ **Obtaining Video Information...**',
 			parse_mode='Markdown',
 			reply_to_message_id=msg_id
 		).message_id
 		a = search_query_yt(text)
+		time.sleep(5)
 		title = a['bot_api_yt'][0]['title']
 		thumb = a['bot_api_yt'][0]['url'].split('v=')[1]
 	else:
 		sent_id = client.send_message(
 			chat_id=chat_id,
-			text='Pesquisando o vídeo no YouTube...',
+			text='🔍 **Searching the video on YouTube...**',
 			parse_mode='Markdown',
 			reply_to_message_id=msg_id
 		).message_id
 		a = search_query_yt(text)
+		time.sleep(5)
 		text = a['bot_api_yt'][0]['url']
 		title = a['bot_api_yt'][0]['title']
 		thumb = text.split('v=')[1]
 	client.delete_messages(message.chat.id, sent_id)
 	print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
 	try:
-		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='baixando: {}'.format(title)).message_id
+		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** `{}`'.format(title)).message_id
 	except:
-		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='baixando: {}'.format(title)).message_id
+		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='**Downloading:** `{}`'.format(title)).message_id
 	nome = title
+	time.sleep(5)
 	exec_thread(download,message,client,sent_id,text,msg_id,nome)
