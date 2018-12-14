@@ -112,10 +112,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
     }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(youtube_dl_url, download=True) 
-        return {
-        'audio': open('{}.mp3'.format(ytitle), 'rb'),
-        'title': ytitle,
-    }
+        audio = open('{}.mp3'.format(ytitle), 'rb')
         final = '{}.mp3'.format(ytitle)
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
