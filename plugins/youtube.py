@@ -35,8 +35,7 @@ def search_query_yt(query):
 
 def download(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
-	res = subprocess.getstatusoutput("""cd dls 
-youtube-dl '{}'""".format(text))[1]
+	res = subprocess.getstatusoutput("""youtube-dl '{}'""".format(text))[1]
 	re = []
 	for	i in res.split('\n'):
 		re.append(i)
@@ -56,7 +55,7 @@ youtube-dl '{}'""".format(text))[1]
 	client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(nome))
 	try:
 		client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
-		sent = client.send_document(message.chat.id,'dls/'+title,caption=nome,reply_to_message_id=msg_id).message_id
+		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
 		client.edit_message_caption(message.chat.id,sent,caption='{}\nDemorou {} segundos'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
