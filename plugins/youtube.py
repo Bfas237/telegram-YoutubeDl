@@ -63,7 +63,7 @@ def download(message, client, sent_id, text, msg_id,nome):
 		client.edit_message_caption(message.chat.id, sent_id,'não foi possiviel enviar')
 		print(error)
 	client.send_chat_action(message.chat.id,'CANCEL')
-	os.remove('dls/'+title)
+	os.remove(title)
 
 def ytdlv(message,client):
 	text = message.text[6:]
