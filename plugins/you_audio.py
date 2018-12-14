@@ -21,7 +21,7 @@ def DownLoadFile(url, file_name):
             for chunk in r.iter_content(chunk_size=Config.CHUNK_SIZE):
                 fd.write(chunk)
     return file_name
-def download_song(song_url, song_title, download_dir):
+def download_song(song_url, song_title):
     if not os.path.isdir(Config.DOWNLOAD_LOCATION):
         os.makedirs(Config.DOWNLOAD_LOCATION)
     """
@@ -44,19 +44,7 @@ def download_song(song_url, song_title, download_dir):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(song_url, download=True) 
     # create download directory, if not exist
- ydl_oépts = {
-                'format': 'bestaudio/best',
-                'outtmpl': os.path.join(download_dir, '%(title)s.%(ext)s'),
-            # default: %(autonumber)s - %(title)s-%(id)s.%(ext)s
-                'postprocessors': [
-                    {
-                        'key': 'FFmpegExtractAudio',
-                        'preferredcodec': 'mp3',
-                        'preferredquality': '128',
-                    },
-                    # {'key': 'EmbedThumbnail',}, {'key': 'FFmpegMetadata',},
-                ],
-            }
+
 from translation import Translation
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
@@ -132,12 +120,13 @@ def dld(message, client, sent_id, text, msg_id,nome):
         download_directory = " "
         download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + youtube_dl_ext + ""
         command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
-        finish = download_song(youtube_dl_url, ytitle, dldidr)
+        finish = download_song(youtube_dl_url, ytitle)
         time.sleep(5)
+        audio = open(download_directory, 'rb')
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
-        sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
+        sent = client.send_audio(message.chat.id, audio=audio, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
         t2 = time.time()
         client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
         time.sleep(3)
