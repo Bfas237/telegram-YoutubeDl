@@ -65,7 +65,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
     t1 = time.time()
     youtube_dl_url = text
     dldir = Config.DOWNLOAD_LOCATION + "/" + text 
-    FORMAT_SELECTION = "Downloading the song in mp3 format <a href='{}'>With the best Quality</a>"
+    FORMAT_SELECTION = "<b>Downloading the song in mp3 format</b> <a href='{}'>With the best Quality</a>"
     command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
     t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
     x_reponse = t_response.decode("UTF-8")
@@ -91,25 +91,27 @@ def dld(message, client, sent_id, text, msg_id,nome):
         youtube_dl_format = "0"
         youtube_dl_ext = "mp3"
         thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
-        client.edit_message_caption(message.chat.id,sent_id,caption='Downloading Your video in mp3...', parse_mode='Markdown')
-        description = " " + " \r\n© @Bfas237Bots"
+        client.edit_message_caption(message.chat.id,sent_id,caption='**Downloading Your video in mp3...**', parse_mode='Markdown')
+        description = " " + " \r\n© Brought to you with ❤️ by @Bfas237Bots "
         download_directory = " "
         download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
         command_to_exec = ["youtube-dl", "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
         finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
         time.sleep(5)
+        new_name = Config.DOWNLOAD_LOCATION + "/" + "@Bfas237Bots" + "_" + ytitle + "." + youtube_dl_ext + ""
         client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-        client.edit_message_caption(message.chat.id,sent_id,caption='Uploading your song to telegram in progress', parse_mode='Markdown')
+        client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
         message.delete(sent_id)
         sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
         t2 = time.time()
-        client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(description,str(int(t2-t1))))
-        #client.delete_messages(message.chat.id, sent_id)
+        client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
+        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
     except subprocess.CalledProcessError as exc:
-        client.edit_message_caption(message.chat.id, sent_id,'Could not send the mp3 file with error: \n\n**{}**'.format(exc))
+        client.edit_message_caption(message.chat.id, sent_id,'**Could not send the mp3 file with error:** \n\n`{}`'.format(exc))
         print(exc)
     client.send_chat_action(message.chat.id,'CANCEL')
+    os.remove(thumb_image_path)
     os.remove(download_directory)
     
     
@@ -121,13 +123,13 @@ def audio(message,client):
     if text == '':
         client.send_message(
             chat_id=chat_id,
-            text='Use: /mp3 video link or Video name',
+            text='**Usage:** `/mp3 video link or Video name`',
             reply_to_message_id=msg_id
         )
     elif 'youtu.be' in text or 'youtube.com' in text:
         sent_id = client.send_message(
             chat_id=chat_id,
-            text='Obtaining Video Information...',
+            text='⏳ **Obtaining Video Information...**',
             parse_mode='Markdown',
             reply_to_message_id=msg_id
         ).message_id
@@ -137,7 +139,7 @@ def audio(message,client):
     else:
         sent_id = client.send_message(
             chat_id=chat_id,
-            text='Searching the video on YouTube...',
+            text='🔍 **Searching the video on YouTube...**',
             parse_mode='Markdown',
             reply_to_message_id=msg_id
         ).message_id
@@ -148,9 +150,9 @@ def audio(message,client):
     client.delete_messages(message.chat.id, sent_id)
     print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
     try:
-        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
+        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** {}'.format(title)).message_id
     except:
-        sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(title)).message_id
+        sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='**Downloading:** {}'.format(title)).message_id
     nome = title
     exec_thread(dld,message,client,sent_id,text,msg_id,nome)
 
