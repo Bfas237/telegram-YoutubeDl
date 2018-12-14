@@ -92,15 +92,16 @@ def dld(message, client, sent_id, text, msg_id,nome):
         youtube_dl_format = "0"
         youtube_dl_ext = "mp3"
         thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
-        client.edit_message_caption(message.chat.id,sent_id,caption='**Downloading Your video in mp3...**', parse_mode='Markdown')
-        time.sleep(5)
+        client.edit_message_caption(message.chat.id,sent_id,caption='**Converting to mp3...**', parse_mode='Markdown')
+        
         description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
         download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + '.%(ext)s' ""
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + youtube_dl_ext + ""
         command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
+        outtmpl = ytitle + '.%(ext)s'
         ydl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + '.%(ext)s',
+        'outtmpl': outtmpl,
         'postprocessors': [
             {'key': 'FFmpegExtractAudio',
              'preferredcodec': 'mp3',
@@ -111,18 +112,18 @@ def dld(message, client, sent_id, text, msg_id,nome):
     }
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(youtube_dl_url, download=True) 
-        audio = open(download_directory, 'rb')
+        audios = open(ytitle + ".mp3", 'rb')
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
-        sent = client.send_audio(message.chat.id, audio=audio, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
+        sent = client.send_audio(message.chat.id, audio=audios, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
         t2 = time.time()
         client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
         time.sleep(3)
         client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
         client.delete_messages(message.chat.id, sent_id)
         client.delete_messages(message.chat.id, msg_id)
-    except subprocess.CalledProcessError as exc:
+    except Exception as exc:
         client.edit_message_caption(message.chat.id, sent_id,'**Could not send the mp3 file with error:** \n\n`{}`'.format(exc))
         print(exc)
     client.send_chat_action(message.chat.id,'CANCEL')
