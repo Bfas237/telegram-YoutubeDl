@@ -107,9 +107,9 @@ def dld(message, client, sent_id, text, msg_id,nome):
         client.delete_messages(message.chat.id, sent_id)
     except subprocess.CalledProcessError as exc:
         client.edit_message_caption(message.chat.id, sent_id,'Could not send the mp3 file with error: \n\n**{}**'.format(exc))
-        print(error)
+        print(exc)
     client.send_chat_action(message.chat.id,'CANCEL')
-    os.remove(title)
+    os.remove(download_directory)
     
     
 
