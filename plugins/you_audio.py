@@ -87,33 +87,33 @@ def dld(message, client, sent_id, text, msg_id,nome):
         response_json["thumbnail"]
     thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg")
     client.edit_message_caption(message.chat.id, sent_id,caption=FORMAT_SELECTION.format(thumbnail), parse_mode='HTML')
+    time.sleep(5)
     try:
         youtube_dl_format = "0"
         youtube_dl_ext = "mp3"
         thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
         client.edit_message_caption(message.chat.id,sent_id,caption='**Downloading Your video in mp3...**', parse_mode='Markdown')
-        description = " " + " \r\n© Brought to you with ❤️ by @Bfas237Bots "
+        time.sleep(5)
+        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
         download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
-        command_to_exec = ["youtube-dl", "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + "@Bfas237Bots" + "_" + ytitle + "." + youtube_dl_ext + ""
+        command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
         finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
         time.sleep(5)
-        new_name = Config.DOWNLOAD_LOCATION + "/" + "@Bfas237Bots" + "_" + ytitle + "." + youtube_dl_ext + ""
-        os.rename(download_directory, new_name)
         client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
-        message.delete(sent_id)
-        sent = client.send_audio(message.chat.id, audio=new_name, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
+        sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
         t2 = time.time()
         client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
         client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
+        client.delete_messages(message.chat.id, sent_id)
     except subprocess.CalledProcessError as exc:
         client.edit_message_caption(message.chat.id, sent_id,'**Could not send the mp3 file with error:** \n\n`{}`'.format(exc))
         print(exc)
     client.send_chat_action(message.chat.id,'CANCEL')
     os.remove(thumb_image_path)
-    os.remove(new_name)
+    os.remove(download_directory)
     
     
 
