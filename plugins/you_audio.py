@@ -65,7 +65,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
     youtube_dl_url = text
     dldir = Config.DOWNLOAD_LOCATION + "/" + text 
     dldidr = Config.DOWNLOAD_LOCATION 
-    FORMAT_SELECTION = "<b>Downloading the song in mp3 format</b> <a href='{}'>With the best Quality</a>"
+    FORMAT_SELECTION = "<b>🔄 Processing the file to be converted </b> <a href='{}'>With the best Quality</a>"
     command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
     t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
     x_reponse = t_response.decode("UTF-8")
@@ -96,9 +96,8 @@ def dld(message, client, sent_id, text, msg_id,nome):
         
         description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
         download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + youtube_dl_ext + ""
-        command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
-        outtmpl = ytitle + '.%(ext)s'
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + "{}.%(ext)s".format(ytitle)
+        outtmpl = download_directory 
         ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': outtmpl,
@@ -110,10 +109,13 @@ def dld(message, client, sent_id, text, msg_id,nome):
             {'key': 'FFmpegMetadata'},
         ],
     }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(youtube_dl_url, download=True) 
-        audio = open('{}.mp3'.format(ytitle), 'rb')
-        final = '{}.mp3'.format(ytitle)
+        try:
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                info_dict = ydl.extract_info(youtube_dl_url, download=True)
+        except:
+            client.edit_message_caption(message.chat.id,sent,caption='Could not Complete the Request: {}'.format(youtube_dl_url))  
+        audio = open('{}.mp3'.format(download_directory), 'rb')
+        final = '{}.mp3'.format(download_directory)
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
@@ -129,7 +131,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
         print(exc)
     client.send_chat_action(message.chat.id,'CANCEL')
     os.remove(thumb_image_path)
-    os.remove(final)
+    os.remove(download_directory)
     
     
 
@@ -169,7 +171,7 @@ def audio(message,client):
     client.delete_messages(message.chat.id, sent_id)
     print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
     try:
-        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** `{}`'.format(title)).message_id
+        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**⬇️ Downloading:** `{}`'.format(title)).message_id
     except:
         sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='**Downloading:** `{}`'.format(title)).message_id
     nome = title
