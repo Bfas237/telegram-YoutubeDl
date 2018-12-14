@@ -62,11 +62,11 @@ def download(message, client, sent_id, text, msg_id,nome):
 		time.sleep(5)
 		client.edit_message_caption(message.chat.id,sent,caption='{}\n\n**Upload Completed in** `{}` **Seconds**'.format(nome,str(int(t2-t1))))
 		time.sleep(3)
-		client.edit_message_caption(message.chat.id,sent,caption='**{}**\n\n{}\n'.format(nome, description))
+		client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
 		client.delete_messages(message.chat.id, msg_id)
 		client.delete_messages(message.chat.id, sent_id)
 	except Exception as error:
-		client.edit_message_caption(message.chat.id, sent_id,'não foi possiviel enviar')
+		client.edit_message_caption(message.chat.id, sent_id,'**Could not send the video file:**')
 		print(error)
 	client.send_chat_action(message.chat.id,'CANCEL')
 	os.remove(title)
