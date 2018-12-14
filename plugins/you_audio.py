@@ -96,8 +96,8 @@ def dld(message, client, sent_id, text, msg_id,nome):
         
         description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
         download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + "{}.%(ext)s".format(ytitle)
-        outtmpl = download_directory 
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_"
+        outtmpl = download_directory + "{}.%(ext)s".format(ytitle)
         ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': outtmpl,
