@@ -9,6 +9,7 @@ from config import Config
 import config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
+import youtube_dl
 import pyrogram
 def exec_thread(target, *args, **kwargs):
     t = threading.Thread(target=target, args=args, kwargs=kwargs)
@@ -60,62 +61,86 @@ def search_query_yt(query):
     return dic
 
 def dld(message, client, sent_id, text, msg_id,nome):
-    if not os.path.isdir(Config.DOWNLOAD_LOCATION):
-        os.makedirs(Config.DOWNLOAD_LOCATION)
-    t1 = time.time()
-    youtube_dl_url = text
-    dldir = Config.DOWNLOAD_LOCATION + "/" + text 
-    FORMAT_SELECTION = "<b>Downloading the song in mp3 format</b> <a href='{}'>With the best Quality</a>"
-    command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
-    t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
-    x_reponse = t_response.decode("UTF-8")
-    response_json = json.loads(x_reponse)
-    ytitle = response_json["title"]
-    inline_keyboard = []
-    for formats in response_json["formats"]:
-        format_id = formats["format_id"]
-        format_string = formats["format"]
-        format_ext = formats["ext"]
-        approx_file_size = ""
-        if "filesize" in formats:
-            approx_file_size = humanbytes(formats["filesize"])
-    thumbnail = "https://placehold.it/50x50"
-    if "thumbnail" in response_json:
-        thumbnail = response_json["thumbnail"]
-        thumbnail_image = "https://placehold.it/50x50"
-    if "thumbnail" in response_json:
-        response_json["thumbnail"]
-    thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg")
-    client.edit_message_caption(message.chat.id, sent_id,caption=FORMAT_SELECTION.format(thumbnail), parse_mode='HTML')
-    time.sleep(5)
-    try:
-        youtube_dl_format = "0"
-        youtube_dl_ext = "mp3"
-        thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
-        client.edit_message_caption(message.chat.id,sent_id,caption='**Downloading Your video in mp3...**', parse_mode='Markdown')
-        time.sleep(5)
-        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
-        download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
-        command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
-        finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
-        time.sleep(5)
-        client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
-        client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
-        time.sleep(5)
-        sent = client.send_document(message.chat.id, download_directory, caption=description, reply_to_message_id=msg_id).message_id
-        t2 = time.time()
-        client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
-        time.sleep(3)
-        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
-        client.delete_messages(message.chat.id, sent_id)
-        client.delete_messages(message.chat.id, msg_id)
-    except subprocess.CalledProcessError as exc:
-        client.edit_message_caption(message.chat.id, sent_id,'**Could not send the mp3 file with error:** \n\n`{}`'.format(exc))
-        print(exc)
-    client.send_chat_action(message.chat.id,'CANCEL')
-    os.remove(thumb_image_path)
-    os.remove(download_directory)
+    global audios
+    def ydl_hook(d):
+        if d['status'] == 'finished':
+                print("Done with downloading, now converting..")
+                print("Filename:", d['filename'])
+                audios.append(d['filename'][:-(len(d['filename']) - d['filename'].rfind('.'))] + ".mp3")
+                
+                if not os.path.isdir(Config.DOWNLOAD_LOCATION):
+                    os.makedirs(Config.DOWNLOAD_LOCATION)
+                    t1 = time.time()
+                    youtube_dl_url = text
+                    dldir = Config.DOWNLOAD_LOCATION + "/" + text
+                    fdir = Config.DOWNLOAD_LOCATION
+                    ydl_opts = {
+            'format': 'bestaudio/best',
+            'fixup': 'detect_or_warn',
+            # 'verbose': False,
+            'quiet': True,
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+            'progress_hooks': [ydl_hook],
+            'outtmpl': '%(title)s.%(ext)s'
+        }
+                    FORMAT_SELECTION = "<b>Downloading the song in mp3 format</b> <a href='{}'>With the best Quality</a>"
+                    command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
+                    t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
+                    x_reponse = t_response.decode("UTF-8")
+                    response_json = json.loads(x_reponse)
+                    ytitle = response_json["title"]
+                    inline_keyboard = []
+                    for formats in response_json["formats"]:
+                        format_id = formats["format_id"]
+                        format_string = formats["format"]
+                        format_ext = formats["ext"]
+                        approx_file_size = ""
+                        if "filesize" in formats:
+                            approx_file_size = humanbytes(formats["filesize"])
+                            thumbnail = "https://placehold.it/50x50"
+                            if "thumbnail" in response_json:
+                                thumbnail = response_json["thumbnail"]
+                                thumbnail_image = "https://placehold.it/50x50"
+                                if "thumbnail" in response_json:
+                                    response_json["thumbnail"]
+                                    thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg")
+                                    client.edit_message_caption(message.chat.id, sent_id,caption=FORMAT_SELECTION.format(thumbnail), parse_mode='HTML')
+                                    time.sleep(5)
+                                    try:
+                                        youtube_dl_format = "0"
+                                        youtube_dl_ext = "mp3"
+                                        thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
+                                        client.edit_message_caption(message.chat.id,sent_id,caption='**Downloading Your video in mp3...**', parse_mode='Markdown')
+                                        time.sleep(5)
+                                        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
+                                        download_directory = " "
+                                        download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
+                                        command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
+                                        song = os.path.join(fdir, ytitle + ".mp3").strip()
+                                        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                                            ydl.download([youtube_dl_url])
+                                        #finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
+                                        time.sleep(5)
+                                        client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
+                                        client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
+                                        time.sleep(5)
+                                        sent = client.send_document(message.chat.id, song, caption=description, reply_to_message_id=msg_id).message_id
+                                        t2 = time.time()
+                                        client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
+                                        time.sleep(3)
+                                        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
+                                        client.delete_messages(message.chat.id, sent_id)
+                                        client.delete_messages(message.chat.id, msg_id)
+                                        except subprocess.CalledProcessError as exc:
+                                            client.edit_message_caption(message.chat.id, sent_id,'**Could not send the mp3 file with error:** \n\n`{}`'.format(exc))
+                                            print(exc)
+                                            client.send_chat_action(message.chat.id,'CANCEL')
+                                            os.remove(thumb_image_path)
+                                            os.remove(song)
     
     
 
