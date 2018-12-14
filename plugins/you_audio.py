@@ -9,6 +9,7 @@ from config import Config
 import config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
+import youtube_dl
 import pyrogram
 def exec_thread(target, *args, **kwargs):
     t = threading.Thread(target=target, args=args, kwargs=kwargs)
@@ -21,29 +22,6 @@ def DownLoadFile(url, file_name):
             for chunk in r.iter_content(chunk_size=Config.CHUNK_SIZE):
                 fd.write(chunk)
     return file_name
-def download_song(song_url, song_title):
-    if not os.path.isdir(Config.DOWNLOAD_LOCATION):
-        os.makedirs(Config.DOWNLOAD_LOCATION)
-    """
-    Download a song using youtube url and song title
-    """
-
-    outtmpl = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + song_title + '.%(ext)s'
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': outtmpl,
-        'postprocessors': [
-            {'key': 'FFmpegExtractAudio',
-             'preferredcodec': 'mp3',
-             'preferredquality': '192',
-            },
-            {'key': 'FFmpegMetadata'},
-        ],
-    }
-
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        info_dict = ydl.extract_info(song_url, download=True) 
-    # create download directory, if not exist
 
 from translation import Translation
 def humanbytes(size):
@@ -118,10 +96,21 @@ def dld(message, client, sent_id, text, msg_id,nome):
         time.sleep(5)
         description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
         download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + youtube_dl_ext + ""
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + '.%(ext)s' ""
         command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
-        finish = download_song(youtube_dl_url, ytitle)
-        time.sleep(5)
+        ydl_opts = {
+        'format': 'bestaudio/best',
+        'outtmpl': Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + '.%(ext)s',
+        'postprocessors': [
+            {'key': 'FFmpegExtractAudio',
+             'preferredcodec': 'mp3',
+             'preferredquality': '192',
+            },
+            {'key': 'FFmpegMetadata'},
+        ],
+    }
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            info_dict = ydl.extract_info(youtube_dl_url, download=True) 
         audio = open(download_directory, 'rb')
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
