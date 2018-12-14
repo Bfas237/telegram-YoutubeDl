@@ -35,7 +35,7 @@ def search_query_yt(query):
 
 def download(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
-	res = subprocess.getstatusoutput("""youtube-dl '{}'""".format(text))[1]
+	res = subprocess.getstatusoutput("""youtube-dl -f best '{}'""".format(text))[1]
 	re = []
 	for	i in res.split('\n'):
 		re.append(i)
