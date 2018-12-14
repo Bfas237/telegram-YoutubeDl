@@ -35,8 +35,8 @@ def search_query_yt(query):
 
 def download(message, client, sent_id, text, msg_id,nome):
 	t1 = time.time()
-	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
-	res = subprocess.getstatusoutput("""youtube-dl {}""".format(dldir))[1]
+	res = subprocess.getstatusoutput("""cd dls 
+youtube-dl '{}'""".format(text))[1]
 	re = []
 	for	i in res.split('\n'):
 		re.append(i)
@@ -53,18 +53,18 @@ def download(message, client, sent_id, text, msg_id,nome):
 	a = re[0]
 	print(a)
 	number = '-'+a.replace('[youtube] ','').replace(': Downloading webpage','')
-	client.edit_message_caption(message.chat.id, sent_id,'Sending {}'.format(nome))
+	client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(nome))
 	try:
 		client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
-		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
+		sent = client.send_document(message.chat.id,'dls/'+title,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
-		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
+		client.edit_message_caption(message.chat.id,sent,caption='{}\nDemorou {} segundos'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
 	except Exception as error:
-		client.edit_message_caption(message.chat.id, sent_id,'Could not send the video')
+		client.edit_message_caption(message.chat.id, sent_id,'não foi possiviel enviar')
 		print(error)
 	client.send_chat_action(message.chat.id,'CANCEL')
-	os.remove(title)
+	os.remove('dls/'+title)
 
 def ytdlv(message,client):
 	text = message.text[6:]
@@ -79,7 +79,7 @@ def ytdlv(message,client):
 	elif 'youtu.be' in text or 'youtube.com' in text:
 		sent_id = client.send_message(
 			chat_id=chat_id,
-			text='Obtaining Video Information...',
+			text='Obtendo informações do vídeo...',
 			parse_mode='Markdown',
 			reply_to_message_id=msg_id
 		).message_id
@@ -89,7 +89,7 @@ def ytdlv(message,client):
 	else:
 		sent_id = client.send_message(
 			chat_id=chat_id,
-			text='Searching the video on YouTube...',
+			text='Pesquisando o vídeo no YouTube...',
 			parse_mode='Markdown',
 			reply_to_message_id=msg_id
 		).message_id
@@ -100,8 +100,8 @@ def ytdlv(message,client):
 	client.delete_messages(message.chat.id, sent_id)
 	print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
 	try:
-		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
+		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='baixando: {}'.format(title)).message_id
 	except:
-		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='Downloading: {}'.format(title)).message_id
+		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='baixando: {}'.format(title)).message_id
 	nome = title
 	exec_thread(download,message,client,sent_id,text,msg_id,nome)
