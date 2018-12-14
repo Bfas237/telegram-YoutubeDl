@@ -52,12 +52,18 @@ def download(message, client, sent_id, text, msg_id,nome):
 	a = re[0]
 	print(a)
 	number = '-'+a.replace('[youtube] ','').replace(': Downloading webpage','')
-	client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(nome))
+``	client.edit_message_caption(message.chat.id, sent_id,'**Uploading `{}` to telegram in progress**'.format(nome))
+	time.sleep(5)
 	try:
 		client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
+		description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
 		sent = client.send_document(message.chat.id,title,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
-		client.edit_message_caption(message.chat.id,sent,caption='{}\nDemorou {} segundos'.format(nome,str(int(t2-t1))))
+		time.sleep(5)
+		client.edit_message_caption(message.chat.id,sent,caption='{}\n\n**Upload Completed in** `{}` **Seconds**'.format(nome,str(int(t2-t1))))
+        	time.sleep(3)
+        	client.edit_message_caption(message.chat.id,sent,caption='**{}**\n\n{}\n'.format(nome, description))
+        	client.delete_messages(message.chat.id, msg_id)
 		client.delete_messages(message.chat.id, sent_id)
 	except Exception as error:
 		client.edit_message_caption(message.chat.id, sent_id,'não foi possiviel enviar')
