@@ -59,11 +59,35 @@ def search_query_yt(query):
 	dic = {'bot_api_yt':list_videos}
 	return dic
 
+def complete(link, title):
+    fe = "0:mp3"
+    youtube_dl_format, youtube_dl_ext = fe.split(":")
+    youtube_dl_url = link
+    thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + title + ".jpg"
+    description = " " + " \r\n© @Bfas237Bots"
+    download_directory = ""
+    command_to_exec = []
+    download_directory = Config.DOWNLOAD_LOCATION + "/" + title + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
+    print(download_directory)
+    command_to_exec = [
+            "youtube-dl",
+            "--extract-audio",
+            "--audio-format", youtube_dl_ext,
+            "--audio-quality", youtube_dl_format,
+            youtube_dl_url,
+            "-o", download_directory
+        ]
+    
+    
+    try:
+        t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as exc:
+       print("error")
+    return download_directory
 def dld(message, client, sent_id, text, msg_id,nome):
 	if not os.path.isdir(Config.DOWNLOAD_LOCATION):
 		os.makedirs(Config.DOWNLOAD_LOCATION)
 	t1 = time.time()
-	youtube_dl_url = text
 	dldir = Config.DOWNLOAD_LOCATION + "/" + text 
 	FORMAT_SELECTION = "Downloading the song in mp3 format <a href='{}'>With the best Quality</a>"
 	command_to_exec = ["youtube-dl", "--no-warnings", "-j", text]
@@ -87,30 +111,21 @@ def dld(message, client, sent_id, text, msg_id,nome):
 		response_json["thumbnail"]
 	thumb_image_path = DownLoadFile(thumbnail_image, Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg")
 	client.edit_message_caption(message.chat.id, sent_id,FORMAT_SELECTION.format(thumbnail))
+	dld = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
 	try:
-		youtube_dl_format = "0"
-		youtube_dl_ext = "mp3"
-		thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + ytitle + ".jpg"
-		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
-		sentid = client.send_message(chat_id=chat_id, Translation.DOWNLOAD_START, parse_mode='Markdown', reply_to_message_id=msg_id).message_id
-		message.delete(sentid)
-		description = " " + " \r\n© @Bfas237Bots"
-		download_directory = " "
-		download_directory = Config.DOWNLOAD_LOCATION + "/" + ytitle + "_" + youtube_dl_format + "." + youtube_dl_ext + ""
-		command_to_exec = ["youtube-dl", "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
+		complete(text, ytitle)
 		client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
-		sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
+		sent = client.send_document(message.chat.id,download_directory,caption=nome,reply_to_message_id=msg_id).message_id
 		t2 = time.time()
-		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(description,str(int(t2-t1))))
+		client.edit_message_caption(message.chat.id,sent,caption='{}\nCompleted in {} Seconds'.format(nome,str(int(t2-t1))))
 		client.delete_messages(message.chat.id, sent_id)
 	except Exception as error:
-		client.edit_message_caption(message.chat.id, sent_id,'Could not send the mp3 file')
+		client.edit_message_caption(message.chat.id, sent_id,'Could not send the video')
 		print(error)
 	client.send_chat_action(message.chat.id,'CANCEL')
 	os.remove(title)
-	
-	
-
+		
+		
 def audio(message,client):
 	text = message.text[5:]
 	chat_id = message.chat.id
