@@ -100,14 +100,16 @@ def dld(message, client, sent_id, text, msg_id,nome):
         command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
         finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
         time.sleep(5)
-        client.send_chat_action(message.chat.id,'UPLOAD_AUDIO')
+        client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
         sent = client.send_audio(message.chat.id, audio=download_directory, caption=description, title=ytitle, thumb=thumb_image_path, reply_to_message_id=msg_id).message_id
         t2 = time.time()
         client.edit_message_caption(message.chat.id,sent,caption='\n**Upload Completed in** `{}` **Seconds**'.format(str(int(t2-t1))))
+        time.sleep(3)
         client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
         client.delete_messages(message.chat.id, sent_id)
+        client.delete_messages(message.chat.id, msg_id)
     except subprocess.CalledProcessError as exc:
         client.edit_message_caption(message.chat.id, sent_id,'**Could not send the mp3 file with error:** \n\n`{}`'.format(exc))
         print(exc)
@@ -135,6 +137,7 @@ def audio(message,client):
             reply_to_message_id=msg_id
         ).message_id
         a = search_query_yt(text)
+        time.sleep(5)
         title = a['bot_api_yt'][0]['title']
         thumb = a['bot_api_yt'][0]['url'].split('v=')[1]
     else:
@@ -145,6 +148,7 @@ def audio(message,client):
             reply_to_message_id=msg_id
         ).message_id
         a = search_query_yt(text)
+        time.sleep(5)
         text = a['bot_api_yt'][0]['url']
         title = a['bot_api_yt'][0]['title']
         thumb = text.split('v=')[1]
@@ -155,6 +159,7 @@ def audio(message,client):
     except:
         sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='**Downloading:** {}'.format(title)).message_id
     nome = title
+    time.sleep(5)
     exec_thread(dld,message,client,sent_id,text,msg_id,nome)
 
     
