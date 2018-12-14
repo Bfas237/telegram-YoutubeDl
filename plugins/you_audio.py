@@ -114,8 +114,8 @@ def dld(message, client, sent_id, text, msg_id,nome):
                 info_dict = ydl.extract_info(youtube_dl_url, download=True)
         except:
             client.edit_message_caption(message.chat.id,sent,caption='Could not Complete the Request: {}'.format(youtube_dl_url))  
-        audio = open('{}.mp3'.format(download_directory), 'rb')
-        final = '{}.mp3'.format(download_directory)
+        audio = open(download_directory + '{}.mp3'.format(ytitle), 'rb')
+        final = download_directory + '{}.mp3'.format(ytitle)
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
         client.edit_message_caption(message.chat.id,sent_id,caption='**Uploading your song to telegram in progress**', parse_mode='Markdown')
         time.sleep(5)
