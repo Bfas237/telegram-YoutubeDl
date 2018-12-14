@@ -96,7 +96,7 @@ def dld(message, client, sent_id, text, msg_id,nome):
         time.sleep(5)
         description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
         download_directory = " "
-        download_directory = Config.DOWNLOAD_LOCATION + "/" + "@Bfas237Bots" + "_" + ytitle + "." + youtube_dl_ext + ""
+        download_directory = Config.DOWNLOAD_LOCATION + "/" + str("@Bfas237Bots") + "_" + ytitle + "." + youtube_dl_ext + ""
         command_to_exec = ["youtube-dl",  "--extract-audio", "--audio-format", youtube_dl_ext,"--audio-quality", youtube_dl_format, youtube_dl_url, "-o", download_directory]
         finish = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
         time.sleep(5)
@@ -126,7 +126,7 @@ def audio(message,client):
     if text == '':
         client.send_message(
             chat_id=chat_id,
-            text='**Usage:** `/mp3 video link or Video name`',
+            text='**Usage:** `!mp3 video link or Video name`',
             reply_to_message_id=msg_id
         )
     elif 'youtu.be' in text or 'youtube.com' in text:
@@ -155,9 +155,9 @@ def audio(message,client):
     client.delete_messages(message.chat.id, sent_id)
     print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
     try:
-        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** {}'.format(title)).message_id
+        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** `{}`'.format(title)).message_id
     except:
-        sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='**Downloading:** {}'.format(title)).message_id
+        sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='**Downloading:** `{}`'.format(title)).message_id
     nome = title
     time.sleep(5)
     exec_thread(dld,message,client,sent_id,text,msg_id,nome)
