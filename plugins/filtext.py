@@ -31,9 +31,9 @@ prefix = config.prefix
 if config.language == "english":
     from languages.english import fetching_download_link, download_job_started, download_successfull, upload_job_started
 def exec_thread(target, *args, **kwargs):
-	t = threading.Thread(target=target, args=args, kwargs=kwargs)
-	t.daemon = True
-	t.start()
+  t = threading.Thread(target=target, args=args, kwargs=kwargs)
+  t.daemon = True
+  t.start()
 
 from hurry.filesize import size, alternative
 import warnings
@@ -105,14 +105,11 @@ def move(client, message):
           rnd = "123456789abcdefgh-_"
           servers = shuffle(rnd)
           time.sleep(10)
-          if len(APPS) < 0:
-            client.edit_message_text(message.chat.id, sent, "Your earch did not return any resluts 😭")
-          else:
+          if len(APPS) > 0:
             client.edit_message_text(message.chat.id, sent, download_job_started.format(servers, APPS[00][2]))
             link = APPS[00][2]
             time.sleep(5)
-            res = requests.get(link + '/download?from=details', headers={
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'}).text
+            res = requests.get(link + '/download?from=details', headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'}).text
             soup = BeautifulSoup(res, "html.parser").find('a', {'id': 'download_link'})
             if soup['href']:
               r = requests.get(soup['href'], stream=True, allow_redirects=True, headers={
@@ -150,3 +147,5 @@ def move(client, message):
             except Exception as Error:
               client.send_message(message.chat.id, "{}".format(Error), reply_to_message_id=message.message_id)
               os.remove(required_file_name)
+          else:
+            client.edit_message_text(message.chat.id, sent, "Your earch did not return any resluts 😭")
