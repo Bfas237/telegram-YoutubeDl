@@ -72,7 +72,7 @@ def download(message, client, sent_id, text, msg_id,nome):
 	os.remove(title)
 
 def ytdlv(message,client):
-	text = message.text[6:]
+	text = message.text[4:]
 	chat_id = message.chat.id
 	msg_id = message.message_id
 	if text == '':
