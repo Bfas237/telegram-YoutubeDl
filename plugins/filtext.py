@@ -89,7 +89,7 @@ def move(client, message):
       word = message.text[4:]
       search = " ".join(word)
       if word == '':
-        client.send_message(chat_id=chat_id, text='**Usage:** `!apk name or package name`', reply_to_message_id=msg_id)
+        client.send_message(message.chat.id,'**Usage:** `!apk name or package name`', reply_to_message_id=message.message_id)
       else:
         sent = client.send_message(message.chat.id, fetching_download_link.format(search), reply_to_message_id=message.message_id).message_id 
         ress = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(search)), headers={
