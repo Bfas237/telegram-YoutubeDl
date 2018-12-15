@@ -78,7 +78,7 @@ def ytdlv(message,client):
 	if text == '':
 		client.send_message(
 			chat_id=chat_id,
-			text='**Usage:** `!ytdl URL do vídeo ou nome`',
+			text='**Usage:** `!vid vídeo URL or name`',
 			reply_to_message_id=msg_id
 		)
 	elif 'youtu.be' in text or 'youtube.com' in text:
