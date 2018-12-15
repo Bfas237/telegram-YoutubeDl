@@ -78,7 +78,7 @@ def get_filename_from_cd(cd):
 
 
 
-@app.on_message(Filters.text & Filters.chat("bfas237off"))
+@app.on_message(Filters.text)
 def move(client, message):
   if message.text.startswith('/mp3') or message.text.startswith('!mp3'):
       exec_thread(audio.audio,message,client)
@@ -132,8 +132,11 @@ def move(client, message):
         client.delete_messages(message.chat.id, message.message_id)
         t1 = time.time()
         client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
-        sentq = client.send_document(message.chat.id, required_file_name, caption="File Upload Sucessfull", reply_to_message_id=message.message_id).message_id
+        sent = client.send_document(message.chat.id, required_file_name, caption="File Upload Sucessfull", reply_to_message_id=message.message_id).message_id
         time.sleep(5)
         t2 = time.time()
-        client.edit_message_caption(message.chat.id,sentq,caption='{}\n\n**File Size**: {}\n\nPowered By **Bfas237 Projects**'.format(required_file_name, str(pretty_size(total_length))))
+        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
+        client.edit_message_caption(message.chat.id,sent,caption='**File Size**: {}\n\n**Completed in**:  `{}` **Seconds**\n'.format(str(pretty_size(total_length)), str(int(t2-t1))))
+        time.sleep(3)
+        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
         os.remove(required_file_name)
