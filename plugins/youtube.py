@@ -84,7 +84,7 @@ def ytdlv(message,client):
 	elif 'youtu.be' in text or 'youtube.com' in text:
 		sent_id = client.send_message(
 			chat_id=chat_id,
-			text='⏳ **Obtaining Video Information...**',
+			text='⏳ **Obtaining Video Information From Youtube...**',
 			parse_mode='Markdown',
 			reply_to_message_id=msg_id
 		).message_id
@@ -95,7 +95,7 @@ def ytdlv(message,client):
 	else:
 		sent_id = client.send_message(
 			chat_id=chat_id,
-			text='🔍 **Searching the video on YouTube...**',
+			text='🔍 **Searching the video on Online...**',
 			parse_mode='Markdown',
 			reply_to_message_id=msg_id
 		).message_id
@@ -104,8 +104,8 @@ def ytdlv(message,client):
 		text = a['bot_api_yt'][0]['url']
 		title = a['bot_api_yt'][0]['title']
 		thumb = text.split('v=')[1]
-	client.delete_messages(message.chat.id, sent_id)
-	print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
+		client.delete_messages(message.chat.id, sent_id)
+		print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
 	try:
 		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** `{}`'.format(title)).message_id
 	except:
