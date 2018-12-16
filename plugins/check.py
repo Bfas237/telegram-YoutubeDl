@@ -8,6 +8,10 @@ from random import randint
 import requests
 import threading
 import io
+app = config.app
+user_id = config.user_id
+prefix = config.prefix
+
 
 @app.on_message(Filters.text & Filters.chat("Bfas237group"))
 def move(client, message):
