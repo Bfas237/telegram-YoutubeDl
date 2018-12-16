@@ -10,7 +10,7 @@ if config.language == "english":
     from languages.english import urban_not_found_text, urban_text
 
 
-@app.on_message(Filters.user(user_id) & Filters.command("urban", prefix))
+@app.on_message(Filters.command("urban", prefix))
 def urban(client, message):
     if len(message.command) > 1:
         word = str(message.text)[6:].lstrip()
