@@ -3,29 +3,43 @@ import config
 
 app = config.app
 user_id = config.user_id
-prefix = config.prefix
+
 
 if config.language == "english":
-    from languages.english import exec_running_text, exec_error_text, exec_success_text, exec_result_text
+    from languages.english import eval_running_text, eval_error_text, eval_success_text, eval_result_text
+
+RUNNING = "**Exec Code:**\n```{}```\n**Running...**"
+ERROR = "**Exec Code:**\n```{}```\n**Error:**\n```{}```"
+SUCCESS = "**Exec Code:**\n```{}```\n**Success**"
+RESULT = "**Exec Code:**\n```{}```\n**Result:**\n```{}```"
 
 
-@app.on_message(Filters.user("197005208") & Filters.command("exec", prefix))
-def execute(c, m):
-    colength = len("exec") + len(prefix)
-    code = m.text[colength:].lstrip()
-    c.edit_message_text(m.chat.id, m.message_id, exec_running_text.replace('{code}', code), parse_mode="HTML")
-    try:
-        exec('def __ex(c, m): ' + ''.join('\n ' + l for l in code.split('\n')))
-        result = locals()['__ex'](c, m)
+@app.on_message(Filters.command("exec", prefix="!"))
+def exec_expression(c, m):
+    execution = " ".join(m.command[1:])
 
-    except Exception as e:
-        c.edit_message_text(m.chat.id, m.message_id, exec_error_text.replace('{code}', code).replace('{error}', str(e)), parse_mode="HTML")
+    if execution:
+        m = m.reply(RUNNING.format(execution))
 
-    else:
-        if result:
-            c.edit_message_text(m.chat.id, m.message_id, exec_result_text.replace('{code}', code).replace('{result}', str(result)), parse_mode="HTML")
-
+        try:
+            exec('def __ex(c, m): ' + ''.join('\n ' + l for l in execution.split('\n')))
+            result = locals()['__ex'](c, m)
+        except Exception as error:
+            c.edit_message_text(
+                m.chat.id,
+                m.message_id,
+                ERROR.format(execution, error)
+            )
         else:
-            c.edit_message_text(m.chat.id, m.message_id, exec_success_text.replace('{code}', code), parse_mode="HTML")
-
-
+            if result is None:
+                c.edit_message_text(
+                    m.chat.id,
+                    m.message_id,
+                    SUCCESS.format(execution)
+                )
+            else:
+                client.edit_message_text(
+                    m.chat.id,
+                    m.message_id,
+                    RESULT.format(execution, result)
+                )
