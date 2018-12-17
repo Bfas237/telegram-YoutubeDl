@@ -3,28 +3,42 @@ import config
 
 app = config.app
 user_id = config.user_id
-prefix = config.prefix
+
 
 if config.language == "english":
     from languages.english import eval_running_text, eval_error_text, eval_success_text, eval_result_text
 
+RUNNING = "**Eval Expression:**\n```{}```\n**Running...**"
+ERROR = "**Eval Expression:**\n```{}```\n**Error:**\n```{}```"
+SUCCESS = "**Eval Expression:**\n```{}```\n**Success**"
+RESULT = "**Eval Expression:**\n```{}```\n**Result:**\n```{}```"
 
-@app.on_message(Filters.user(user_id) & Filters.command("eval", prefix))
-def evalcode(c, m):
-    colength = len("eval") + len(prefix)
-    code = m.text[colength:].lstrip()
-    c.edit_message_text(m.chat.id, m.message_id, eval_running_text.replace('{code}', code), parse_mode="HTML")
-    try:
-        result = eval(code)
 
-    except Exception as e:
-        c.edit_message_text(m.chat.id, m.message_id, eval_error_text.replace('{code}', code).replace('{error}', str(e)), parse_mode="HTML")
+@app.on_message(Filters.command("eval", prefix="!"))
+def eval_expression(client, message):
+    expression = " ".join(message.command[1:])
 
-    else:
-        if result:
-            c.edit_message_text(m.chat.id, m.message_id, eval_result_text.replace('{code}', code).replace('{result}', str(result)), parse_mode="HTML")
+    if expression:
+        m = message.reply(RUNNING.format(expression))
 
+        try:
+            result = eval(expression)
+        except Exception as error:
+            client.edit_message_text(
+                m.chat.id,
+                m.message_id,
+                ERROR.format(expression, error)
+            )
         else:
-            c.edit_message_text(m.chat.id, m.message_id, eval_success_text.replace('{code}', code), parse_mode="HTML")
-
-
+            if result is None:
+                client.edit_message_text(
+                    m.chat.id,
+                    m.message_id,
+                    SUCCESS.format(expression)
+                )
+            else:
+                client.edit_message_text(
+                    m.chat.id,
+                    m.message_id,
+                    RESULT.format(expression, result)
+                )
