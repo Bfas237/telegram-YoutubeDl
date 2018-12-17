@@ -1,19 +1,47 @@
 {
     "test_mode": false,
-    "user_id": 671045549,
-    "peers_by_username": {},
     "peers_by_phone": {},
-    "peers_by_id": {},
-    "dc_id": 4,
+    "user_id": 671045549,
+    "peers_by_id": {
+        "627198200": 9088983084339001728,
+        "-1001388869604": -4306967879103758681,
+        "652479164": -3482190295994286403,
+        "555403914": 8129194607984687421,
+        "671045549": -459746262691080985,
+        "-1001491438824": -2705899984681611134,
+        "375949405": 4384401936304775977,
+        "594079057": -9037657082889879362,
+        "409779443": 887036885342429640,
+        "407149974": -634651135271387499,
+        "-1001112473705": -1802842461549394705,
+        "197005208": 779609851298433274,
+        "264753020": -2381996289759057562,
+        "614706218": 3262231953007787961
+    },
+    "date": 1545062750,
     "auth_key": [
-        "SmzKJwkuteDcOGmwXLuVUKjcD7LBi3cmqIZK9DvFe7x",
-        "6W+ojYa4S2rZ2+UI1hGtRqMG9xes4ymJNhjLDpoMG/l",
-        "SMK5bLqTOlsNFcNyvsXLaOlKiSJxu7Hioy+cBTnbtkR",
-        "CvhrTxdsPxSsbi+RrtPR//e8WSrtsAQRLFiMZoL7sEw",
-        "otdQ/WeUzTv1vVU7yZy5rTDhrz1hTzmy4JMoKNrbNOg",
-        "qfbwof+R/HU+dcdje0D/R/ZIiZukJ/aA13UVv6bE6bn",
-        "yaQpHjMwUhmMg/q8/vX8eylLhs16FodbZz+i/sas8aJ",
-        "dAjerFTY4Jvlr0nta5vJ7XWWcy46dWE80iiXE2Rvw=="
+        "XcpVPNA1AHZuXdJYXlY7SqQCzyXvo6lIQ9AIbFe7ack",
+        "maVEsl26Xo87eEOariIdOVbmqvCfXvzjyJ9tPDLCAo4",
+        "y///WJ20fMbwg25GhP1sxUiYb5HhCSjVTEvvhVz1KcY",
+        "Dj8jTCeJXz14TTUY2qVFscv4Q74KNXWUQhejlMb37/G",
+        "6VI+6yOabi3T0HNxzhLZaooQBDuZ08MDAdCTASrRl0Q",
+        "Zsg4MGT9MlCZ0uVoaUrpetYnAn92FHFKUh/sP99zXll",
+        "xQb9fXS1zoUkmTSI8OlXTwjFBLS7f3+RGxzwKHWQ36E",
+        "Fa4kz44x3TloaDxqTp07Mosb2HNWBxtgkbNtotVHA=="
     ],
-    "date": 1544695499
+    "peers_by_username": {
+        "teyima": 407149974,
+        "theleviathans": 375949405,
+        "bfas237off": -1001491438824,
+        "deferder": 264753020,
+        "gmotherbot": 671045549,
+        "bfas237group": -1001112473705,
+        "proxyultrasurf": 652479164,
+        "bfaschat": 197005208,
+        "m_xcore7": 409779443,
+        "bumshakalaka10": 555403914,
+        "viruscypher": 614706218,
+        "iykemonero": 594079057
+    },
+    "dc_id": 4
 }
