@@ -46,7 +46,17 @@ log_channel = -1001249303594
 
 # Enabled plugins
 
-plugins = ["eval", "exec", "info", "purgeme", "urban", "bash", "restart", "filtext", "check"]
+plugins = [
+    "eval", 
+    "exec", 
+    "info", 
+    "purgeme", 
+    "urban", 
+    "bash", 
+    "restart", 
+    "filtext", 
+    "haste"
+]
 
 # Command prefix
 
