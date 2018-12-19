@@ -138,7 +138,7 @@ def move(client, message):
         r = requests.get(word, stream=True, allow_redirects=True)
         rfile_name = get_filename_from_cd(r.headers.get('content-disposition'))
         print(rfile_name)
-        client.edit_message_text(message.chat.id, sent, "testing {}".format(str(rfile_name)))
+        client.edit_message_text(message.chat.id, sent, "testing {}".format(rfile_name))
         with open(rfile_name, 'wb') as file:
             for chunk in r.iter_content(chunk_size=1024):
                 total_length = r.headers.get('content-length')
