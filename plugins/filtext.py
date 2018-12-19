@@ -142,7 +142,7 @@ def move(client, message):
         rfile_name = get_filename_from_cd(r.headers.get('content-disposition'))
         print(rfile_name)
         client.edit_message_text(message.chat.id, sent, "testing {}".format(rfile_name))
-        download(word, rfile_name, progress_callback_simple)
+        filedownload(word, rfile_name, progress_callback_simple)
         second_time = time.time()
         client.edit_message_text(message.chat.id, sent, download_successfull.format(str(second_time - first_time)[:5]))
         time.sleep(5)
