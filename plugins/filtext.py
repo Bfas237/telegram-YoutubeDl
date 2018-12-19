@@ -127,7 +127,7 @@ def move(client, message):
       exec_thread(audio.audio,message,client)
   if message.text.startswith('/vid') or message.text.startswith('!vid'):
       exec_thread(youtube.ytdlv,message,client)
-  if message.text.startswith('/dlurl') or message.text.startswith('!dlurl'):
+  if message.text.startswith('/dl') or message.text.startswith('!dl'):
       first_time = time.time()
       word = message.text[6:]
       search = " ".join(word)
@@ -135,9 +135,10 @@ def move(client, message):
         client.send_message(message.chat.id,'**Usage:** `!dlurl direct download link of the file`', reply_to_message_id=message.message_id)
       else: 
         sent = client.send_message(message.chat.id, "🔎 Pinging and doing some internet search for your file", reply_to_message_id=message.message_id).message_id 
-        r = requests.get(word, stream=True, allow_redirects=True, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'})
+        r = requests.get(word, stream=True, allow_redirects=True)
         rfile_name = get_filename_from_cd(r.headers.get('content-disposition'))
         print(rfile_name)
+        client.edit_message_text(message.chat.id, sent, "testing {}".format(str(rfile_name)))
         with open(rfile_name, 'wb') as file:
             for chunk in r.iter_content(chunk_size=1024):
                 total_length = r.headers.get('content-length')
