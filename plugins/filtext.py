@@ -48,6 +48,7 @@ def download(srcurl, dstfilepath, progress_callback=None, block_size=8192):
 
                 file_size_dl += len(buffer)
                 out_file.write(buffer)
+                out_file.flush()
 
                 if progress_callback!=None: progress_callback(file_size_dl,file_size)
     with open(dstfilepath,"wb") as out_file:
@@ -139,16 +140,13 @@ def move(client, message):
         rfile_name = get_filename_from_cd(r.headers.get('content-disposition'))
         print(rfile_name)
         client.edit_message_text(message.chat.id, sent, "testing {}".format(rfile_name))
-        with open(rfile_name, 'wb') as file:
-            for chunk in r.iter_content(chunk_size=1024):
-                total_length = r.headers.get('content-length')
-                dl = 0
-                total_length = int(total_length)
-                if chunk:
-                    dl += len(chunk)
-                    done = int(100 * dl / total_length)
-                    file.write(chunk)
-                    file.flush()
+        try:
+            download(word, rfile_name, progress_callback_simple)
+        except:
+            traceback.print_exc()
+            input()
+            pass
+        finally:
             second_time = time.time()
             client.edit_message_text(message.chat.id, sent, download_successfull.format(str(second_time - first_time)[:5]))
             time.sleep(5)
@@ -161,7 +159,7 @@ def move(client, message):
             time.sleep(5)
             t2 = time.time()
             description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
-            client.edit_message_caption(message.chat.id,sent,caption='**File Size**: {}\n\n**Completed in**:  `{}` **Seconds**\n'.format(str(pretty_size(total_length)), str(int(t2-t1))))
+            client.edit_message_caption(message.chat.id,sent,caption='**Completed in**:  `{}` **Seconds**\n'.format(str(int(t2-t1))))
             time.sleep(3)
             client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
             os.remove(rfile_name)
