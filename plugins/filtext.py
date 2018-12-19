@@ -32,7 +32,7 @@ def progress_callback_simple(downloaded,total):
     )
     sys.stdout.flush()
 
-def download(srcurl, dstfilepath, progress_callback=None, block_size=8192):
+def filedownload(srcurl, dstfilepath, progress_callback=None, block_size=8192):
     def _download_helper(response, out_file, file_size):
         if progress_callback!=None: progress_callback(0,file_size)
         if block_size == None:
@@ -56,11 +56,13 @@ def download(srcurl, dstfilepath, progress_callback=None, block_size=8192):
             with urllib.request.urlopen(srcurl) as response:
                 file_size = int(response.getheader("Content-Length"))
                 _download_helper(response,out_file,file_size)
+                return dstfilepath
         else:
             response = urllib2.urlopen(srcurl)
             meta = response.info()
             file_size = int(meta.getheaders("Content-Length")[0])
             _download_helper(response,out_file,file_size)
+            return dstfilepath
 
 import traceback
 
@@ -140,30 +142,24 @@ def move(client, message):
         rfile_name = get_filename_from_cd(r.headers.get('content-disposition'))
         print(rfile_name)
         client.edit_message_text(message.chat.id, sent, "testing {}".format(rfile_name))
-        try:
-            download(word, rfile_name, progress_callback_simple)
-        except:
-            traceback.print_exc()
-            input()
-            pass
-        finally:
-            second_time = time.time()
-            client.edit_message_text(message.chat.id, sent, download_successfull.format(str(second_time - first_time)[:5]))
-            time.sleep(5)
-            client.edit_message_text(message.chat.id, sent, upload_job_started)
-            client.delete_messages(message.chat.id, sent)
-            client.delete_messages(message.chat.id, message.message_id)
-            t1 = time.time()
-            client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
-            sent = client.send_document(message.chat.id, rfile_name, caption="File Upload Sucessfull", reply_to_message_id=message.message_id).message_id
-            time.sleep(5)
-            t2 = time.time()
-            description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
-            client.edit_message_caption(message.chat.id,sent,caption='**Completed in**:  `{}` **Seconds**\n'.format(str(int(t2-t1))))
-            time.sleep(3)
-            client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
-            os.remove(rfile_name)
-
+        download(word, rfile_name, progress_callback_simple)
+        second_time = time.time()
+        client.edit_message_text(message.chat.id, sent, download_successfull.format(str(second_time - first_time)[:5]))
+        time.sleep(5)
+        client.edit_message_text(message.chat.id, sent, upload_job_started)
+        client.delete_messages(message.chat.id, sent)
+        client.delete_messages(message.chat.id, message.message_id)
+        t1 = time.time()
+        client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
+        sent = client.send_document(message.chat.id, rfile_name, caption="File Upload Sucessfull", reply_to_message_id=message.message_id).message_id
+        time.sleep(5)
+        t2 = time.time()
+        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
+        client.edit_message_caption(message.chat.id,sent,caption='**Completed in**:  `{}` **Seconds**\n'.format(str(int(t2-t1))))
+        time.sleep(3)
+        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
+        os.remove(rfile_name)
+        return true
   if message.text.startswith('/apk') or message.text.startswith('!apk'):
       first_time = time.time()
       word = message.text[4:]
