@@ -16,9 +16,52 @@ import youtube_dl
 
 from contextlib import redirect_stdout
 try:
-    from urllib import quote_plus  # Python 2.X
+    from urllib.parse import quote_plus
+    import urllib.request
+    python3 = True
 except ImportError:
-    from urllib.parse import quote_plus  # Python 3+
+    from urllib import quote_plus
+    import urllib2
+    python3 = False
+
+def progress_callback_simple(downloaded,total):
+    sys.stdout.write(
+        "\r" +
+        (len(str(total))-len(str(downloaded)))*" " + str(downloaded) + "/%d"%total +
+        " [%3.2f%%]"%(100.0*float(downloaded)/float(total))
+    )
+    sys.stdout.flush()
+
+def download(srcurl, dstfilepath, progress_callback=None, block_size=8192):
+    def _download_helper(response, out_file, file_size):
+        if progress_callback!=None: progress_callback(0,file_size)
+        if block_size == None:
+            buffer = response.read()
+            out_file.write(buffer)
+
+            if progress_callback!=None: progress_callback(file_size,file_size)
+        else:
+            file_size_dl = 0
+            while True:
+                buffer = response.read(block_size)
+                if not buffer: break
+
+                file_size_dl += len(buffer)
+                out_file.write(buffer)
+
+                if progress_callback!=None: progress_callback(file_size_dl,file_size)
+    with open(dstfilepath,"wb") as out_file:
+        if python3:
+            with urllib.request.urlopen(srcurl) as response:
+                file_size = int(response.getheader("Content-Length"))
+                _download_helper(response,out_file,file_size)
+        else:
+            response = urllib2.urlopen(srcurl)
+            meta = response.info()
+            file_size = int(meta.getheaders("Content-Length")[0])
+            _download_helper(response,out_file,file_size)
+
+import traceback
 
 from bs4 import BeautifulSoup
 from pyaxmlparser import APK
@@ -94,6 +137,7 @@ def move(client, message):
         sent = client.send_message(message.chat.id, "🔎 Pinging and doing some internet search for your file", reply_to_message_id=message.message_id).message_id 
         r = requests.get(word, stream=True, allow_redirects=True, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'})
         rfile_name = get_filename_from_cd(r.headers.get('content-disposition'))
+        print(rfile_name)
         with open(rfile_name, 'wb') as file:
             for chunk in r.iter_content(chunk_size=1024):
                 total_length = r.headers.get('content-length')
