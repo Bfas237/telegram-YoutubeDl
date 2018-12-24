@@ -21,3 +21,4 @@ python-magic
 Tgcrypto
 git+git://github.com/google/chatbase-python.git
 pytube
+python-telegram-bot
