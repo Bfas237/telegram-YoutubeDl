@@ -27,7 +27,7 @@ from chatbase import Message
 
   
   
-import config
+from config import Config
 
 app = config.app
 user_id = config.user_id
@@ -107,36 +107,7 @@ def progress_callback_simple(downloaded,total):
     )
     sys.stdout.flush()
 
-def download(srcurl, dstfilepath, progress_callback=None, block_size=8192):
-    def _download_helper(response, out_file, file_size):
-        if progress_callback!=None: progress_callback(0,file_size)
-        if block_size == None:
-            buffer = response.read()
-            out_file.write(buffer)
 
-            if progress_callback!=None: progress_callback(file_size,file_size)
-        else:
-            file_size_dl = 0
-            while True:
-                buffer = response.read(block_size)
-                if not buffer: break
-
-                file_size_dl += len(buffer)
-                out_file.write(buffer)
-
-                if progress_callback!=None: progress_callback(file_size_dl,file_size)
-    with open(dstfilepath,"wb") as out_file:
-        if python3:
-            with urllib.request.urlopen(srcurl) as response:
-                file_size = int(response.getheader("Content-Length"))
-                _download_helper(response,out_file,file_size)
-            return dstfilepath
-        else:
-            response = urllib2.urlopen(srcurl)
-            meta = response.info()
-            file_size = int(meta.getheaders("Content-Length")[0])
-            _download_helper(response,out_file,file_size)
-            return dstfilepath
 
 def dynamic_data(data):
     return Filters.create(
