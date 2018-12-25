@@ -1,30 +1,25 @@
 {
-    "peers_by_username": {
-        "bfaschat": 197005208,
-        "wolfgang0bot": 777521418,
-        "bfas237botsdevs": -1001139726492,
-        "hanslett": 409257769
-    },
-    "user_id": 777521418,
+    "date": 1545727139,
     "peers_by_id": {
         "197005208": -8380154432987039009,
-        "409257769": -4805399546234775610,
-        "777521418": 5891419335779547326,
-        "-1001139726492": 2969296718934049962,
-        "596427825": 4481175881250598354
+        "777521418": 5891419335779547326
+    },
+    "test_mode": false,
+    "dc_id": 4,
+    "peers_by_username": {
+        "wolfgang0bot": 777521418,
+        "bfaschat": 197005208
     },
     "auth_key": [
-        "mBioyx7WjdXtfwDJ25tzb7cLpZsKJsURBqR5Y6uMYdU",
-        "hqlF+JdBrRMsAEZ6HqT7YCdD8FULKQgKQRByDX88y0F",
-        "uFzPmNR2xLA+DZYeGKOE4zjMVGaTl+WkHOk0fDLZVcG",
-        "UMESTBfttWwKd7qNyLwHwkuxFAVR9iF0YlUX98LJiCN",
-        "UcOBRn4ZKDk4G/qO4eXpGU6UilTHWwhed+13BNJXPtS",
-        "8BemAnOoI/yYQonFIvHrqt6yrezA9WTY8AvXTdtrIss",
-        "2oqeq737SHklySOP42oeEean+kQjO/L67sjdnp088Vr",
-        "idEQBrKuK9NGhzT3/ozdaVeIeQOkQ2Y/Hlawk7+Fg=="
+        "Niy3G3mZkFTiQUOTuDE+7w/NOeKZ0fzRUChtqirItky",
+        "FasA/6iyD4XSWi+WnivcjGCMD0Kup/YsuqH8mo0Rme0",
+        "ZCV+X/LBmhU3J2C+kdLFLd7+6sOSyNBZ/0/+tgtW1tO",
+        "Qfb0q/nN+a21eCTz9Uu1DgSXNN/ZcoYUtSQfAMfwzwW",
+        "l4vlNrnCxz3AR47RHKT0NgitRbxOeGZ15xaNXy+OOJh",
+        "XGFM6tK4quK0uAxlDGNXLDXvwIVK9X6mLFuzGh28+Zy",
+        "ex8B4uiMYa2JE53FYSDENgSvWhIBt4bB+AWO8kcAdR2",
+        "YIqF8Pb9d4YsowKOM1fEQaf53BhuzQ4ag6YRVaHIA=="
     ],
-    "peers_by_phone": {},
-    "date": 1545722918,
-    "dc_id": 4,
-    "test_mode": false
+    "user_id": 777521418,
+    "peers_by_phone": {}
 }
