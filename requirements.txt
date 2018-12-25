@@ -1,4 +1,4 @@
-morepath
+python-telegram-bot
 requests
 bs4
 git+git://github.com/google/chatbase-python.git
