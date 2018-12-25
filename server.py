@@ -10,7 +10,14 @@ import subprocess
 from urllib.request import urlopen
 from functools import wraps
 from difflib import SequenceMatcher
+import subprocess
+import math
+import requests
+import os
+import json
 
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 import youtube_dl  # Very Affects on the time of first script launch!
 from bs4 import BeautifulSoup
 from telegram import ParseMode
@@ -20,7 +27,7 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler,
 from telegram.error import (TelegramError, Unauthorized, BadRequest,
                             TimedOut, ChatMigrated, NetworkError)
 from pytube import YouTube
-
+import pyrogram
 
 if not os.path.isdir('tmp'):
   os.makedirs('tmp')
@@ -329,7 +336,49 @@ class Handlers:
             response = urlopen("https://www.youtube.com/results?search_query=" + query)
             html = response.read()
             soup = BeautifulSoup(html, "html.parser")
-
+            try:
+                command_to_exec = ["youtube-dl", "--no-warnings", "-j", url]
+                logger.info(command_to_exec)
+                t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
+                # https://github.com/rg3/youtube-dl/issues/2630#issuecomment-38635239
+            except subprocess.CalledProcessError as exc:
+                # print("Status : FAIL", exc.returncode, exc.output)
+                bot.send_message(
+                    chat_id=update.from_user.id,
+                    text=exc.output.decode("UTF-8"),
+                    reply_to_message_id=update.message_id
+                )
+            else:
+                # logger.info(t_response)
+                x_reponse = t_response.decode("UTF-8")
+                response_json = json.loads(x_reponse)
+                logger.info(response_json)
+                inline_keyboard = []
+                for formats in response_json["formats"]:
+                    format_id = formats["format_id"]
+                    format_string = formats["format"]
+                    format_ext = formats["ext"]
+                    approx_file_size = ""
+                    if "filesize" in formats:
+                        approx_file_size = humanbytes(formats["filesize"])
+                    cb_string = "{}|{}|{}".format("video", format_id, format_ext)
+                    if not "audio only" in format_string:
+                        ikeyboard = [
+                            pyrogram.InlineKeyboardButton(
+                                "[" + format_string + "] (" + format_ext + " - " + approx_file_size + ")",
+                                callback_data=(cb_string).encode("UTF-8")
+                            )
+                        ]
+                        inline_keyboard.append(ikeyboard)
+                cb_string = "{}|{}|{}".format("audio", "5", "mp3")
+                inline_keyboard.append([
+                    pyrogram.InlineKeyboardButton("MP3 " + "(" + "medium" + ")", callback_data=cb_string.encode("UTF-8"))
+                ])
+                cb_string = "{}|{}|{}".format("audio", "0", "mp3")
+                inline_keyboard.append([
+                    pyrogram.InlineKeyboardButton("MP3 " + "(" + "best" + ")", callback_data=cb_string.encode("UTF-8"))
+                ])
+                reply_markup = pyrogram.InlineKeyboardMarkup(inline_keyboard)
             links = [a for a in soup.findAll(attrs={'class': 'yt-uix-tile-link'})]
             for link in links:
                 if not link['href'].startswith('/watch'):
@@ -341,7 +390,7 @@ class Handlers:
                 return
 
             bot.send_message(chat_id=update.message.chat_id, text="Found video for you! "
-                                                                  "https://www.youtube.com{}".format(links[0]['href']))
+                                                                  "https://www.youtube.com{}".format(links[0]['href']), reply_markup=reply_markup)
             link = "https://youtube.com" + links[0]['href']
         else:
             link = active_chats.get(update.message.chat_id).get('link')
