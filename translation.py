@@ -1,5 +1,5 @@
 class Translation(object):
-    START_TEXT = "Please send me any video link. Supported Sites: https://rg3.github.io/youtube-dl/supportedsites.html \nSource Code: https://github.com/SpEcHiDe/AnyDLBot \n© @AnyDLBot"
+    START_TEXT = "Welcome to our bot. I am capable of performing download on almost anything. \n\nI can do some basic functions for now which you can discover by navigating by yourself. Hope you find me useful 😊\n\n"
     ABS_TEXT = " Please don't be selfish."
     UPGRADE_TEXT = "No upgrades!"
     FORMAT_SELECTION = "Select the desired format: <a href='{}'>file size might be approximate</a> "
@@ -9,3 +9,10 @@ class Translation(object):
     RCHD_BOT_API_LIMIT = "size greater than maximum allowed size (50MB). Neverthless, trying to upload."
     RCHD_TG_API_LIMIT = "Sorry. But, I cannot upload files greater than 1.5GB due to Telegram API limitations."
     AFTER_SUCCESSFUL_UPLOAD_MSG = "Please rate me if you find me useful. https://t.me/storebot?start=AnyDLBot"
+    NOT_AUTH_USER_TEXT = "The bot developer is a selfish guy. for now you can\'t download anything for this is just the beta bot. try the main bot at @gmotherbot"
+    SAVED_CUSTOM_THUMB_NAIL = "Custom video thumbnail saved. This image will be used in the above video."
+    SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully."
+    CUSTOM_CAPTION_UL_FILE = " © @Bfas237Bots"
+    NO_CUSTOM_THUMB_NAIL_FOUND = "No Custom THumbNail found. Please goto @UploadBot"
+    HELP_TEXT = "This bot is Powered and managed by @Bfas237Bots Team. Below you can find the basic usage for your needs\n\n`!vid` 👉🏻  Dwonload videos from all [supported sites](https://rg3.github.io/youtube-dl/supportedsites.html)\n`!mp3`  👉🏻  Download your favourite songs\n`!apk`  👉🏻  Download your best apps from playstore\n\n`More Commands will be available soon` "
+    DOWNLOAD_TOOLS_TEXT = "🆑 Here you can perform download actions. This section permits you to download songs in mp3, videos, apps and more.\n\n If you find any bug or need some feature then you can join the support group for that."
