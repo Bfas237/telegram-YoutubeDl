@@ -428,7 +428,7 @@ def command_get_specify_apk(bot, update):
     time.sleep(5)
     if len(APPS) == 0:
       bot.edit_message_text(text="**📱 Apk Downloader Premium**\n\n__Step 2 of  2__\n"
-                              "\n\n"🔍 Search for **{}** Returned (`0`) results\n\n You may try again by entering an altenative search and i will find it for you".format(search_query)",
+                              "\n\n🔍 Search for **{}** Returned (`0`) results\n\n You may try again by entering an altenative search and i will find it for you".format(search_query)",
                          chat_id=update.from_user.id,
                          parse_mode="Markdown",
                          message_id=sent.chat_id,
