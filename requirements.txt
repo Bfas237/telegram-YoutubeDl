@@ -22,3 +22,5 @@ Tgcrypto
 git+git://github.com/google/chatbase-python.git
 pytube
 python-telegram-bot
+apkdl
+fake_useragent
