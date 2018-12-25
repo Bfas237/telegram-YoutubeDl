@@ -307,12 +307,12 @@ def start(bot, update):
         disable_web_page_preview=True).message_id
     
 
-@app.on_message(Filters.text | Filters.regex("!apkw"))
+@app.on_message(Filters.text | Filters.regex("!apk"))
 def apk(client, message):
   global active_chats
   active_chats[message.from_user.id] = {'actions': []}
   audio_string = "{}".format("downl")
-  if message.text.startswith('/apkw') or message.text.startswith('!apkw'):
+  if message.text.startswith('/apk') or message.text.startswith('!apk'):
       first_time = time.time()
       word = message.text[4:]
       search = " ".join(word)
