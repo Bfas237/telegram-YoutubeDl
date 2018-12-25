@@ -152,15 +152,11 @@ def DownLoadFile(url, file_name):
             for chunk in r.iter_content(chunk_size=Config.CHUNK_SIZE):
                 fd.write(chunk)
     return file_name
-def search(query, options={}):
-  base_headers = {
-        'User-Agent':  'Mozilla/6.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5',
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Accept-Language': 'zh-CN,zh;q=0.8'
-    }
-  headers = dict(base_headers, **options)
+def search(query):
   try:
-    res = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(query)), headers=headers).text
+    res = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(query)), headers={
+			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'
+		}).text
     soup = BeautifulSoup(res, "html.parser")
     for i in soup.find('div', {'id':'search-res'}).findAll('dl', {'class':'search-dl'}):
         app = i.find('p', {'class':'search-title'}).find('a')
@@ -427,6 +423,7 @@ def command_get_specify_apk(bot, update):
         reply_to_message_id=update.message_id,
         disable_web_page_preview=True)
     print('Searching for: {}'.format(searchs))
+    time.sleep(5)
     search(searchs)
     time.sleep(5)
     if len(APPS) == 0:
@@ -488,84 +485,17 @@ def pyrogram_data(bot, update):
         message_id=update.message.message_id
     )        
     
-            
-@app.on_callback_query(dynamic_data("getapk"))
-def pyrogram_data(bot, update):
-    if active_chats.get(update.from_user.id).get('link') is None:
-      search_query = active_chats.get(update.from_user.id).get('search_query')
-    searchs = " ".join(search_query) 
-    sent = bot.send_message(update.from_user.id, fetching_download_link.format(searchs), reply_to_message_id=update.message.message_id).message_id 
-    print('Searching for: {}'.format(searchs))
-    search(searchs)
-    time.sleep(5)
-    if len(APPS) == 0:
-      bot.edit_message_text(text='Your search returned No results',
-                         chat_id=update.message.chat_id,
-                         parse_mode="Markdown",
-                         message_id=update.message.chat_id,
-                         #reply_markup=reply_markup,
-                         disable_web_page_preview=True)
-      return
-    
-    bot.delete_messages(update.from_user.id, update.message.message_id)
-    inline_keyboard = []
-    if len(APPS) > 0:
-      for idx, app in enumerate(APPS):
-        
-        start_string = "{}|{}".format(idx, app[0])
-        ikeyboard = [
-                            InlineKeyboardButton(
-                                "[{:02d}]  -  {}".format(idx, app[0]),
-                                callback_data=start_string.encode("UTF-8")
-                            )
-                        ]
-        user_chat = active_chats.get(update.from_user.id, None)
-        user_chat['Aps'] = APPS
-        user_chat['Apps'] = None        
-        inline_keyboard.append(ikeyboard)
-        num=len(APPS)
-        reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        bot.edit_message_text(
-        text="🔍 Search for *{}* Returned (`{}`) results\n\n Click on your app and i will download it right away".format(search_query, num),
-        chat_id=update.from_user.id,
-        
-        reply_markup=reply_markup,
-        message_id=sent,
-        disable_web_page_preview=True
-    )        
-
-def save_photo(bot, update):
-    if str(update.from_user.id) not in Config.AUTH_USERS:
-        bot.send_message(
-            chat_id=update.from_user.id,
-            text=Translation.NOT_AUTH_USER_TEXT,
-            reply_to_message_id=update.message_id
-        )
-        return
-    download_location = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".jpg"
-    bot.download_media(
-        message=update,
-        file_name=download_location
-    )
-    bot.send_message(
-        chat_id=update.from_user.id,
-        text=Translation.SAVED_CUSTOM_THUMB_NAIL,
-        reply_to_message_id=update.message_id
-    )
-
 
 def download(link, options={}):
-    base_headers = {
-        'User-Agent':  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5',
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Accept-Language': 'zh-CN,zh;q=0.8'
-    }
-    headers = dict(base_headers, **options)
     try:
-        res = requests.get(link + '/download?from=details', headers=headers).text
+        res = requests.get(link + '/download?from=details', headers={
+			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'
+		}).text
         soup = BeautifulSoup(res, "html.parser").find('a', {'id':'download_link'})
         if soup['href']:
-            r = requests.get(soup['href'], stream=True, headers=headers)
+            r = requests.get(soup['href'], stream=True, headers={
+			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'
+		})
             required_file_name = get_filename_from_cd(r.headers.get('content-disposition'))
             with open(link.split('/')[-1] + '.apk', 'wb') as file:
                 for chunk in r.iter_content(chunk_size=8192):
@@ -610,17 +540,15 @@ def button(bot, update):
     bot.edit_message_text(update.from_user.id, update.message.message_id, download_job_started.format(servers, APPS[app_num][2]))
     time.sleep(5)
     print('Downloading {}.apk ...'.format(link.split('/')[-1]))
-    base_headers = {
-        'User-Agent':  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5',
-        'Accept-Encoding': 'gzip, deflate, sdch',
-        'Accept-Language': 'zh-CN,zh;q=0.8'
-    }
-    headers = dict(base_headers, **options)
     try:
-        res = requests.get(link + '/download?from=details', headers=headers).text
+        res = requests.get(link + '/download?from=details', headers={
+			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'
+		}).text
         soup = BeautifulSoup(res, "html.parser").find('a', {'id':'download_link'})
         if soup['href']:
-            r = requests.get(soup['href'], stream=True, headers=headers)
+            r = requests.get(soup['href'], stream=True, headers={
+			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'
+		})
             required_file_name = get_filename_from_cd(r.headers.get('content-disposition'))
             with open(required_file_name, 'wb') as file:
                 for chunk in r.iter_content(chunk_size=8192):
@@ -661,6 +589,5 @@ if __name__ == "__main__" :
         os.makedirs(Config.DOWNLOAD_LOCATION)
     app.add_handler(pyrogram.MessageHandler(start, pyrogram.Filters.command(["start"])))
     app.add_handler(pyrogram.MessageHandler(messages, pyrogram.Filters.text))
-    app.add_handler(pyrogram.MessageHandler(save_photo, pyrogram.Filters.photo))
     app.add_handler(pyrogram.CallbackQueryHandler(button))
     app.run()
