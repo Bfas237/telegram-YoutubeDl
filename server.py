@@ -1,3 +1,4 @@
+
 import time
 import logging
 logging.basicConfig(level=logging.DEBUG,
@@ -18,11 +19,6 @@ from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from pyrogram import Client, Filters, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove, ForceReply
 from contextlib import redirect_stdout
-from fake_useragent import UserAgent
-ua = UserAgent()
-
-from fake_useragent import FakeUserAgentError
-
 from translation import Translation
 
 APPS = []
@@ -70,7 +66,7 @@ class Config(object):
     # default thumbnail to be used in the videos
     DEF_THUMB_NAIL_VID_S = "https://placehold.it/90x90"
 app = Client(
-    "777521418:AAGqM3e9xItYpTE-zINAizVCPyDMGR_UPIo",
+    "777521418:AAHzTomeP_UKaZv64uHjLJ2GXRMvdvXm-gM",
     api_id=api_id,
     api_hash=api_hash)
 
@@ -157,12 +153,8 @@ def DownLoadFile(url, file_name):
                 fd.write(chunk)
     return file_name
 def search(query, options={}):
-  try:
-      ua = UserAgent()
-  except FakeUserAgentError:
-      pass
   base_headers = {
-        'User-Agent':  ua.random,
+        'User-Agent':  'Mozilla/6.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5',
         'Accept-Encoding': 'gzip, deflate, sdch',
         'Accept-Language': 'zh-CN,zh;q=0.8'
     }
@@ -307,72 +299,6 @@ def start(bot, update):
         disable_web_page_preview=True).message_id
     
 
-@app.on_message(Filters.text | Filters.regex("!apk"))
-def apk(client, message):
-  global active_chats
-  active_chats[message.from_user.id] = {'actions': []}
-  audio_string = "{}".format("downl")
-  if message.text.startswith('/apk') or message.text.startswith('!apk'):
-      first_time = time.time()
-      word = message.text[4:]
-      search = " ".join(word)
-      if word == '':
-        client.send_message(message.chat.id,'**Usage:** `!apk name or package name`', reply_to_message_id=message.message_id)
-      else: 
-        sent = client.send_message(message.chat.id, fetching_download_link.format(search), reply_to_message_id=message.message_id).message_id 
-        ress = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(search)), headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'}).text 
-        APPS = []
-        soups = BeautifulSoup(ress, "html.parser")
-        for i in soups.find('div', {'id': 'search-res'}).findAll('dl', {'class': 'search-dl'}):
-          app = i.find('p', {'class': 'search-title'}).find('a')
-          app_url = 'https://apkpure.com' + app['href']
-          APPS.append((app.text,
-                     i.findAll('p')[1].find('a').text,
-                     'https://apkpure.com' + app['href']))
-        rnd = "123456789abcdefgh-_"
-        servers = shuffle(rnd)
-        time.sleep(10)
-      
-        if len(APPS) > 0:
-          client.edit_message_text(message.chat.id, sent, download_job_started.format(servers, APPS[00][2]))
-        link = APPS[00][2]
-        time.sleep(5)
-        res = requests.get(link + '/download?from=details', headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'}).text
-        soup = BeautifulSoup(res, "html.parser").find('a', {'id': 'download_link'})
-        if soup['href']:
-          r = requests.get(soup['href'], stream=True, allow_redirects=True, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'})
-          required_file_name = get_filename_from_cd(r.headers.get('content-disposition'))
-          with open(required_file_name, 'wb') as apk:
-            for chunk in r.iter_content(chunk_size=8192):
-              total_length = r.headers.get('content-length')
-              dl = 0
-              total_length = int(total_length)
-              if chunk:
-                  dl += len(chunk)
-                  done = int(100 * dl / total_length)
-                  apk.write(chunk)
-                  apk.flush()
-        second_time = time.time()
-        client.edit_message_text(message.chat.id, sent, download_successfull.format(str(second_time - first_time)[:5]))
-        time.sleep(5)
-        client.edit_message_text(message.chat.id, sent, upload_job_started)
-        try:
-          client.delete_messages(message.chat.id, sent)
-          client.delete_messages(message.chat.id, message.message_id)
-        except pyrogram.api.errors.exceptions.forbidden_403.MessageDeleteForbidden as E:
-          client.send_message(message.chat.id, str(E), reply_to_message_id=message.message_id)
-          pass
-        t1 = time.time()
-        client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
-        sent = client.send_document(message.chat.id, required_file_name, caption="File Upload Sucessfull", reply_to_message_id=message.message_id).message_id
-        time.sleep(5)
-        t2 = time.time()
-        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
-        client.edit_message_caption(message.chat.id,sent,caption='**File Size**: {}\n\n**Completed in**:  `{}` **Seconds**\n'.format(str(pretty_size(total_length)), str(int(t2-t1))))
-        time.sleep(3)
-        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
-        os.remove(required_file_name)
-
 @app.on_callback_query(dynamic_data("start"))
 def start_data(bot, update):
     global active_chats
@@ -456,10 +382,10 @@ def pyrogram_data(bot, update):
         [
             [  # First row
                 # Generates a callback query when pressed
-                InlineKeyboardButton("🚧 Download Android Apps " , callback_data=apk_string.encode("UTF-8"))
+                InlineKeyboardButton("🔎 " + " Search Android Apps " , callback_data=apk_string.encode("UTF-8"))
             ],
             [ 
-                InlineKeyboardButton("🚫  Abort Process" , callback_data=start_string.encode("UTF-8"))
+                InlineKeyboardButton("🚫  Cancel" , callback_data=start_string.encode("UTF-8"))
             ]
         
         
@@ -629,12 +555,8 @@ def save_photo(bot, update):
 
 
 def download(link, options={}):
-    try:
-        ua = UserAgent()
-    except FakeUserAgentError:
-        pass
     base_headers = {
-        'User-Agent':  ua.random,
+        'User-Agent':  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5',
         'Accept-Encoding': 'gzip, deflate, sdch',
         'Accept-Language': 'zh-CN,zh;q=0.8'
     }
@@ -688,12 +610,8 @@ def button(bot, update):
     bot.edit_message_text(update.from_user.id, update.message.message_id, download_job_started.format(servers, APPS[app_num][2]))
     time.sleep(5)
     print('Downloading {}.apk ...'.format(link.split('/')[-1]))
-    try:
-        ua = UserAgent()
-    except FakeUserAgentError:
-        pass
     base_headers = {
-        'User-Agent':  ua.random,
+        'User-Agent':  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5',
         'Accept-Encoding': 'gzip, deflate, sdch',
         'Accept-Language': 'zh-CN,zh;q=0.8'
     }
@@ -736,15 +654,12 @@ def button(bot, update):
     bot.edit_message_caption(update.from_user.id,sent.message_id,caption='\n{}\n'.format(description))
     os.remove(required_file_name)
 
-        
-        
 
 if __name__ == "__main__" :
     # create download directory, if not exist
     if not os.path.isdir(Config.DOWNLOAD_LOCATION):
         os.makedirs(Config.DOWNLOAD_LOCATION)
     app.add_handler(pyrogram.MessageHandler(start, pyrogram.Filters.command(["start"])))
-    app.add_handler(pyrogram.MessageHandler(apk, pyrogram.Filters.text))
     app.add_handler(pyrogram.MessageHandler(messages, pyrogram.Filters.text))
     app.add_handler(pyrogram.MessageHandler(save_photo, pyrogram.Filters.photo))
     app.add_handler(pyrogram.CallbackQueryHandler(button))
