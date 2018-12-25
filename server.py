@@ -359,7 +359,7 @@ def pyrogram_data(bot, update):
     start_string = "{}".format("start")
     apk_string = "{}".format("apks")
     bot.edit_message_text(
-        text="🆑 Here you can perform download actions. This section permits you to download android apps for free.\n\n Have fun",
+        text=Translation.DOWNLOAD_TOOLS_TEXT,
         chat_id=update.from_user.id,
         reply_markup=InlineKeyboardMarkup(
         [
@@ -386,7 +386,7 @@ def pyrogram_data(bot, update):
     
     start_string = "{}".format("downl")
     bot.edit_message_text(
-        text="**📱 Apk Downloader Premium**\n\n__Step 1 of  3__\n"
+        text="**📱 Apk Downloader Premium**\n\n__Step 1 of  2__\n"
                               "\nOK! Send me search query in next message.",
         chat_id=update.from_user.id,
         reply_markup=InlineKeyboardMarkup(
@@ -427,7 +427,8 @@ def command_get_specify_apk(bot, update):
                     'https://apkpure.com' + app['href']))
     time.sleep(5)
     if len(APPS) == 0:
-      bot.edit_message_text(text='Your search returned No results',
+      bot.edit_message_text(text="**📱 Apk Downloader Premium**\n\n__Step 2 of  2__\n"
+                              "\n\n"🔍 Search for **{}** Returned (`0`) results\n\n You may try again by entering an altenative search and i will find it for you".format(search_query)",
                          chat_id=update.from_user.id,
                          parse_mode="Markdown",
                          message_id=sent.chat_id,
@@ -454,7 +455,8 @@ def command_get_specify_apk(bot, update):
         num=len(APPS)
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
         bot.edit_message_text(
-        text="🔍 Search for **{}** Returned (`{}`) results\n\n Click on your app and i will download it right away".format(search_query, num),
+        text="**📱 Apk Downloader Premium**\n\n__Step 2 of  2__\n"
+                              "\n\n🔍 Search for **{}** Returned (`{}`) results\n\n Click on your app and i will download it right away".format(search_query, num)",
         chat_id=update.from_user.id,
         
         reply_markup=reply_markup,
