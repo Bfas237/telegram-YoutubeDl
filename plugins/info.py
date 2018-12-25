@@ -19,8 +19,8 @@ from hachoir.parser import createParser
 from pyrogram import Client, Filters, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove, ForceReply
 from contextlib import redirect_stdout
 from fake_useragent import UserAgent
-ua = UserAgent(verify_ssl=False)
-
+ua = UserAgent(verify_ssl=False, use_cache_server=False)
+ua.best_browser
 from fake_useragent import FakeUserAgentError
 
 from translation import Translation
