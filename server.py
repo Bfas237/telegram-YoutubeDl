@@ -228,7 +228,7 @@ def messages(bot, update):
         ]
     ))
 
-@app.on_message(Filters.command("start"))    
+
 def start(bot, update):
     global active_chats
     active_chats[update.from_user.id] = {'actions': []}
@@ -262,7 +262,28 @@ def start(bot, update):
         reply_to_message_id=update.message_id,
         disable_web_page_preview=True).message_id
     
-
+def help(bot, update):
+    global active_chats
+    if update.from_user.id not in active_chats:
+        active_chats[update.from_user.id] = {'actions': []}
+    active_chats[update.from_user.id]['actions'].append('help')
+    
+    
+    start_string = "{}".format("start")
+   
+    sent = bot.send_message(update.chat.id, 
+        text=Translation.HELP_TEXT,
+        reply_markup=InlineKeyboardMarkup(
+        [
+            [  
+                InlineKeyboardButton("🏡  Return Back Home", callback_data=start_string.encode("UTF-8")),
+            ]
+        ]
+    ),
+        reply_to_message_id=update.message_id,
+        disable_web_page_preview=True).message_id
+    
+    
 @app.on_callback_query(dynamic_data("start"))
 def start_data(bot, update):
     global active_chats
@@ -337,8 +358,6 @@ def pyrogram_data(bot, update):
     
     start_string = "{}".format("start")
     apk_string = "{}".format("apks")
-    vid_string = "{}".format("vid")
-    aud_string = "{}".format("aud")
     bot.edit_message_text(
         text="🆑 Here you can perform download actions. This section permits you to download android apps for free.\n\n Have fun",
         chat_id=update.from_user.id,
@@ -593,6 +612,7 @@ if __name__ == "__main__" :
     if not os.path.isdir(Config.DOWNLOAD_LOCATION):
         os.makedirs(Config.DOWNLOAD_LOCATION)
     app.add_handler(pyrogram.MessageHandler(start, pyrogram.Filters.command(["start"])))
+    app.add_handler(pyrogram.MessageHandler(help, pyrogram.Filters.command(["help"])))
     app.add_handler(pyrogram.MessageHandler(messages, pyrogram.Filters.text))
     app.add_handler(pyrogram.CallbackQueryHandler(button))
     app.run()
