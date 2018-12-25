@@ -19,7 +19,7 @@ from hachoir.parser import createParser
 from pyrogram import Client, Filters, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove, ForceReply
 from contextlib import redirect_stdout
 from fake_useragent import UserAgent
-ua = UserAgent()
+ua = UserAgent(verify_ssl=False)
 
 from fake_useragent import FakeUserAgentError
 
