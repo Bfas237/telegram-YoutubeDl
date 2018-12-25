@@ -21,4 +21,5 @@ python-magic
 Tgcrypto
 git+git://github.com/google/chatbase-python.git
 pytube
+certifi
 fake_useragent
