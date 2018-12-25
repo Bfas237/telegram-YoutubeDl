@@ -152,24 +152,17 @@ def DownLoadFile(url, file_name):
             for chunk in r.iter_content(chunk_size=Config.CHUNK_SIZE):
                 fd.write(chunk)
     return file_name
-def search(query):
-  try:
-    res = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(query)), headers={
+
+def src(query):
+	res = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(query)), headers={
 			'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'
 		}).text
-    soup = BeautifulSoup(res, "html.parser")
-    for i in soup.find('div', {'id':'search-res'}).findAll('dl', {'class':'search-dl'}):
-        app = i.find('p', {'class':'search-title'}).find('a')
-        APPS.append((app.text,
-                    i.findAll('p')[1].find('a').text,
-                    'https://apkpure.com' + app['href']))
-  except (ProtocolError, ConnectionError, ConnectionResetError, ReadTimeout, Timeout, TimeoutError, ConnectTimeout) as e:
-    bot.send_message(
-            chat_id=update.from_user.id,
-            text=e,
-            reply_to_message_id=update.message_id
-        )
-    return None
+	soup = BeautifulSoup(res, "html.parser")
+	for i in soup.find('div', {'id':'search-res'}).findAll('dl', {'class':'search-dl'}):
+		app = i.find('p', {'class':'search-title'}).find('a')
+		APPS.append((app.text,
+					i.findAll('p')[1].find('a').text,
+					'https://apkpure.com' + app['href']))
 fetching_download_link = "🔁 Searching for **{}** in progress."
 download_job_started = "\n ⬇️ **Download Server** [{}]({}) in progress"
 download_successfull = "Download Was was completed in `{}`"
@@ -424,7 +417,7 @@ def command_get_specify_apk(bot, update):
         disable_web_page_preview=True)
     print('Searching for: {}'.format(searchs))
     time.sleep(5)
-    search(searchs)
+    src(searchs)
     time.sleep(5)
     if len(APPS) == 0:
       bot.edit_message_text(text='Your search returned No results',
