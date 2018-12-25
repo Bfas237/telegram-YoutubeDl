@@ -1,6 +1,7 @@
 python-telegram-bot
 requests
 bs4
+pytube
 git+git://github.com/google/chatbase-python.git
 pyrogram[fast]
 hachoir
@@ -9,4 +10,5 @@ tldextract
 pyaxmlparser
 hurry.filesize
 apkdl
-fake_useragent
+youtube-dl
+
