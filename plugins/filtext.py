@@ -130,7 +130,7 @@ def move(client, message):
       exec_thread(audio.audio,message,client)
   if message.text.startswith('/vid') or message.text.startswith('!vid'):
       exec_thread(youtube.ytdlv,message,client)
-  if message.text.startswith('/apk') or message.text.startswith('!apk'):
+  if message.text.startswith('/none') or message.text.startswith('!none'):
       first_time = time.time()
       word = message.text[4:]
       search = " ".join(word)
