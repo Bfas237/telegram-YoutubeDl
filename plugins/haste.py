@@ -34,6 +34,6 @@ def haste(client, message):
             message.edit("Hastebin seems to be down… ( ^^')")
              return
     message.edit(
-        "**Complete!:** Check it at {}/{}.py".format(BASE, haste).replace('  ', ' '),
+        "**Complete!:** Check it at {}/{}.py".format(BASE, resp),
         reply_to_message_id=reply.message_id
     )
