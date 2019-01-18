@@ -4,19 +4,6 @@ from pyrogram import Client
 import os
 
 class Config(object):
-    # get a token from https://chatbase.com
-    CHAT_BASE_TOKEN = os.environ.get("CHAT_BASE_TOKEN", "880f05a1-685c-4909-a8f6-b17463625eba")
-    # get a token from @BotFather
-    TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "671045549:AAGcbv7YKKQdUIjTnMmrEg46AGgyJmnLtFg")
-    # your domain to show when download file is greater than MAX_FILE_SIZE
-    HTTP_DOMAIN = os.environ.get("HTTP_DOMAIN", "https://bfbr0.herokuapp.com/")
-    # for running on Heroku.com
-    PORT = int(os.environ.get('PORT', 5000))
-    # The Telegram API things
-    APP_ID = int(os.environ.get("APP_ID", api_id))
-    API_HASH = os.environ.get("API_HASH", api_hash)
-    # Get these values from my.telegram.org
-    # the download location, where the HTTP Server runs
     DOWNLOAD_LOCATION = "./DOWNLOADS"
     # Telegram maximum file upload size
     MAX_FILE_SIZE = 400000000
