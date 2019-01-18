@@ -2,8 +2,7 @@ from pyrogram import Client
 
 ## Bot settings ##
 import os
-api_id = 256406
-api_hash = "31fd969547209e7c7e23ef97b7a53c37"
+
 class Config(object):
     # get a token from https://chatbase.com
     CHAT_BASE_TOKEN = os.environ.get("CHAT_BASE_TOKEN", "880f05a1-685c-4909-a8f6-b17463625eba")
@@ -29,10 +28,9 @@ class Config(object):
 language = "english"
 
 app = Client(
-    "671045549:AAGcbv7YKKQdUIjTnMmrEg46AGgyJmnLtFg",
-    api_id=api_id,
-    api_hash=api_hash
-)
+    os.environ.get("TOKEN"),
+    api_id=os.environ["APP_ID"],
+    api_hash=os.environ["API_HASH"])
 
 # Automatically sets your user id
 
