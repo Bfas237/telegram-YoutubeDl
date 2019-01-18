@@ -20,6 +20,11 @@ def haste(client, message):
     reply = message.reply_to_message
 
     if reply.text is None:
+        client.edit_message_text(
+                message.chat.id,
+                message.message_id,
+                "You didn't use me correctly so try again"
+            )
         return
 
     message.delete()
@@ -28,7 +33,6 @@ def haste(client, message):
         if resp.status >= 300:
             message.edit("Hastebin seems to be down… ( ^^')")
              return
-        haste = (resp.json())['key']
     message.edit(
         "**Complete!:** Check it at {}/{}.py".format(BASE, haste).replace('  ', ' '),
         reply_to_message_id=reply.message_id
