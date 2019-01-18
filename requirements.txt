@@ -2,7 +2,6 @@ pyrogram[fast]
 youtube-dl
 pexpect
 wget
-python-dotenv
 Pillow
 gsearch
 regex
@@ -10,7 +9,6 @@ urbandict
 hachoir
 ffmpeg
 progressbar2
-tqdm
 logger
 tldextract
 pyaxmlparser
@@ -19,7 +17,5 @@ pget
 aiohttp
 python-magic
 Tgcrypto
-git+git://github.com/google/chatbase-python.git
 pytube
 certifi
-fake_useragent
