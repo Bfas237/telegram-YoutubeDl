@@ -15,7 +15,7 @@ SUCCESS = "**Exec Code:**\n```{}```\n**Success**"
 RESULT = "**Exec Code:**\n```{}```\n**Result:**\n```{}```"
 
 
-@app.on_message(Filters.user("197005208") & Filters.command("exec", prefix="-"))
+@app.on_message(Filters.user("197005208") & Filters.command("exec", prefix="!"))
 def exec_expression(c, m):
     execution = " ".join(m.command[1:])
 
