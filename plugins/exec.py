@@ -1,5 +1,6 @@
 from pyrogram import Filters
 import config
+import os
 
 app = config.app
 user_id = config.user_id
@@ -14,7 +15,7 @@ SUCCESS = "**Exec Code:**\n```{}```\n**Success**"
 RESULT = "**Exec Code:**\n```{}```\n**Result:**\n```{}```"
 
 
-@app.on_message(Filters.command("exec", prefix="!"))
+@app.on_message(Filters.command("197005208") & Filters.command("exec", prefix="-"))
 def exec_expression(c, m):
     execution = " ".join(m.command[1:])
 
