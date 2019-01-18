@@ -30,6 +30,6 @@ def haste(client, message):
              return
         haste = (resp.json())['key']
     message.edit(
-        "**Complete!:** Check it at {}/{}.py".format(BASE, haste["key"]),
+        "**Complete!:** Check it at {}/{}.py".format(BASE, haste).replace('  ', ' '),
         reply_to_message_id=reply.message_id
     )
