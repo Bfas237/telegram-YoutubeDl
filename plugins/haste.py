@@ -8,7 +8,7 @@ user_id = config.user_id
 
 from pyrogram import Client, Filters
     
-@Client.on_message(Filters.command("r", prefix="!") & Filters.reply & ~Filters.edited & Filters.group)
+@app.on_message(Filters.command("r", prefix="!") & Filters.reply & ~Filters.edited & Filters.group)
 def r(client, message):
     if len(message.command) > 1:
         colength = len("r") + len("!")
