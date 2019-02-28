@@ -66,7 +66,6 @@ def filedownload(srcurl, dstfilepath, progress_callback=None, block_size=8192):
 import traceback
 
 from bs4 import BeautifulSoup
-from pyaxmlparser import APK
 from shutil import copyfile
 ydl = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 app = config.app
@@ -80,45 +79,9 @@ def exec_thread(target, *args, **kwargs):
   t.daemon = True
   t.start()
 
-from hurry.filesize import size, alternative
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
 
-
-def shuffle(word):
-    wordlen = len(word)
-    word = list(word)
-    for i in range(0,wordlen-1):
-        pos = randint(i+1,wordlen-1)
-        word[i], word[pos] = word[pos], word[i]
-    word = "".join(word)
-    return word
-
-def pretty_size(sizes):
-    units = ['B', 'KB', 'MB', 'GB']
-    unit = 0
-    while sizes >= 1024:
-        sizes /= 1024
-        unit += 1
-    return '%0.2f %s' % (sizes, units[unit])
-def dosomething(buf):
-    """Do something with the content of a file"""
-    sleep(0.01)
-    pass
-
-    
-    
-        
-def get_filename_from_cd(cd):
-    """
-    Get filename from content-disposition
-    """
-    if not cd:
-        return None
-    fname = re.findall('filename=(.+)', cd)
-    if len(fname) == 0:
-        return None
-    return fname[0]
 
 
 
