@@ -161,7 +161,7 @@ def ytdlv(message,client):
     chat_id = message.chat.id
     msg_id = message.message_id
     if text == '':
-        client.send_message(chat_id, '*Usage:* /ytdl URL of vídeo or nome', 'Markdown',
+        client.send_message(chat_id, '*Usage:* /vid URL of vídeo or nome', 'Markdown',
                                 reply_to_message_id=msg_id)
     else:
         sent_id = client.send_message(chat_id,
@@ -169,15 +169,16 @@ def ytdlv(message,client):
             parse_mode='Markdown',
             reply_to_message_id=msg_id
         ).message_id
+    fsize = None
     try:
         if 'youtu.be' not in text and 'youtube.com' not in text:
             yt = ydl.extract_info('ytsearch:' + text, download=False)['entries'][0]
         else:
             yt = ydl.extract_info(text, download=False)
-            for f in yt['formats']:
-                if f['format_id'] == '140':
-                    fsize = f['filesize']
-                    name = yt['title']
+        for f in yt['formats']:
+            if f['format_id'] == '140':
+                fsize = f['filesize']
+        name = yt['title']
     except Exception as e:
         return client.edit_message_text((chat_id, sent_id),
                         text='An error occured.\n\n' + str(e)
