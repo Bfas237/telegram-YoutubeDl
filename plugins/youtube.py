@@ -112,11 +112,11 @@ def ytdlv(message,client):
         time.sleep(3)
     for f in a['formats']:
         if f['format_id'] == '140':
-        fsize = f['filesize']
-        name = a['title']
-        text = a['url']
-        title = a['title']
-        thumb = text.split('v=')
+            fsize = f['filesize']
+            name = a['title']
+            text = a['url']
+            title = a['title']
+            thumb = text.split('v=')
         client.delete_messages(message.chat.id, sent_id)
         print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
     try:
