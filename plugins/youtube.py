@@ -155,56 +155,42 @@ def search_yt(query):
             pass
     return list_videos
 
-
 def ytdlv(message,client):
-    text = message.text[4:]
-    chat_id = message.chat.id
-    msg_id = message.message_id
-    if text == '':
-        client.send_message(chat_id, '*Usage:* /vid URL of vídeo or nome', 'Markdown',
-                                reply_to_message_id=msg_id)
-    else:
-        sent_id = client.send_message(chat_id,
-            text='⏳ **Obtaining Video Information...**',
-            parse_mode='Markdown',
-            reply_to_message_id=msg_id
-        ).message_id
-    fsize = None
-    try:
-        if 'youtu.be' not in text and 'youtube.com' not in text:
-            yt = ydl.extract_info('ytsearch:' + text, download=False)['entries'][0]
-        else:
-            yt = ydl.extract_info(text, download=False)
-        for f in yt['formats']:
-            if f['format_id'] == '140':
-                fsize = f['filesize']
-        name = yt['title']
-    except Exception as e:
-        return client.edit_message_text((chat_id, sent_id),
-                        text='An error occured.\n\n' + str(e)
-                    )
-    if fsize < 52428800:
-        if ' - ' in name:
-            performer, title = name.rsplit(' - ', 1)
-        else:
-            performer = None
-            title = name
-        client.edit_message_text((chat_id, sent_id),
-                                        'Baixando <code>{}</code> do YouTube...\n({})'.format(name, pretty_size(fsize)),
-                                        'HTML')
-        ydl.extract_info('https://www.youtube.com/watch?v=' + yt['id'], download=True)
-        client.edit_message_text((chat_id, sent_id), 'Enviando áudio...')
-        client.send_chat_action(chat_id, 'UPLOAD_DOCUMENT')
-        client.send_audio(chat_id, open(ydl.prepare_filename(yt), 'rb'),
-                                  performer=performer,
-                                  title=title,
-                                  duration=yt['duration'],
-                                  reply_to_message_id=msg['message_id']
-                                  )
-        os.remove(ydl.prepare_filename(yt))
-        client.delete_messages((chat_id, sent_id))
-    else:
-        client.edit_message_text((chat_id, sent_id),
-                                        'Ow, o arquivo resultante ({}) ultrapassa o meu limite de 50 MB'.format(
-                                            pretty_size(fsize)))
-    return True
+	text = message.text[5:]
+	chat_id = message.chat.id
+	msg_id = message.message_id
+	if text == '':
+		client.send_message(
+			chat_id=chat_id,
+			text='Uso: /vid URL do vídeo ou nome',
+			reply_to_message_id=msg_id
+		)
+	elif 'youtu.be' in text or 'youtube.com' in text:
+		sent_id = client.send_message(
+			chat_id=chat_id,
+			text='Obtendo informações do vídeo...',
+			parse_mode='Markdown',
+			reply_to_message_id=msg_id
+		).message_id
+		a = search_query_yt(text)
+		title = a['bot_api_yt'][0]['title']
+		thumb = a['bot_api_yt'][0]['url'].split('v=')[1]
+	else:
+		sent_id = client.send_message(
+			chat_id=chat_id,
+			text='Pesquisando o vídeo no YouTube...',
+			parse_mode='Markdown',
+			reply_to_message_id=msg_id
+		).message_id
+		a = search_query_yt(text)
+		text = a['bot_api_yt'][0]['url']
+		title = a['bot_api_yt'][0]['title']
+		thumb = text.split('v=')[1]
+	client.delete_messages(message.chat.id, sent_id)
+	print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
+	try:
+		sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='baixando: {}'.format(title)).message_id
+	except:
+		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='baixando: {}'.format(title)).message_id
+	nome = title
+	exec_thread(download,message,client,sent_id,text,msg_id,nome)
