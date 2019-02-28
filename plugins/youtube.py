@@ -192,6 +192,11 @@ def ytdlv(message,client):
         try:
             file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-"))
             download_directory = ud.unidecode(SAVE_PATH + '{}.mp4'.format(file_name))
+            sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
+            yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
+
+            print("Downloading..." + YouTube(text).title)
+            yt.download(SAVE_PATH, filename=file_name)
             thumb_image_path = DownLoadFile(
                 thumbnail_image,
                 SAVE_PATH + str(message.from_user.id) + ".jpg",
@@ -226,11 +231,6 @@ def ytdlv(message,client):
                 # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
             else:
                 thumb_image_path = None
-            sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
-            yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
-
-            print("Downloading..." + YouTube(text).title)
-            yt.download(SAVE_PATH, filename=file_name)
             client.edit_message_caption(message.chat.id, sent_id,'Uploading... {}'.format(title))
             final = SAVE_PATH + '{}.mp4'.format(file_name)
             client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
