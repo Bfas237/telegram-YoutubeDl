@@ -190,6 +190,8 @@ def ytdlv(message,client):
         duration = 0
         thumbnail_image = 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
         try:
+            file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-"))
+            download_directory = ud.unidecode(SAVE_PATH + '{}.mp4'.format(file_name))
             thumb_image_path = DownLoadFile(
                 thumbnail_image,
                 SAVE_PATH + str(message.from_user.id) + ".jpg",
@@ -226,7 +228,6 @@ def ytdlv(message,client):
                 thumb_image_path = None
             sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
             yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
-            file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-"))
 
             print("Downloading..." + YouTube(text).title)
             yt.download(SAVE_PATH, filename=file_name)
@@ -237,7 +238,13 @@ def ytdlv(message,client):
             t2 = time.time()
             client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
             client.delete_messages(message.chat.id, sent_id)
+
         except Exception as e:
             sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e)).message_id
             print(str(e))
             client.send_chat_action(message.chat.id,'CANCEL')
+        try:
+            os.remove(download_directory)
+            os.remove(thumb_image_path)
+        except:
+            pass
