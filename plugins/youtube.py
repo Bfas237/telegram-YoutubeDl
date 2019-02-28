@@ -188,11 +188,11 @@ def ytdlv(message,client):
         width = 0
         height = 0
         duration = 0
-        thumbnail_image = SAVE_PATH + 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
+        thumbnail_image = 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
         try:
             thumb_image_path = DownLoadFile(
                 thumbnail_image,
-                SAVE_PATH + str(update.from_user.id) + ".jpg",
+                SAVE_PATH + str(message.from_user.id) + ".jpg",
                 8192,
                 None,  # bot,
                 "Downloading:",
