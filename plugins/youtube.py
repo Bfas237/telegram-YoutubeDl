@@ -29,7 +29,8 @@ def pretty_size(size):
         size /= 1024
         unit += 1
     return '%0.2f %s' % (size, units[unit])
-
+def show_progress_bar(stream, chunk, file_handle, bytes_remaining):
+         return
 def search_ytdd(query):
     url_base = "https://www.youtube.com/results"
     url_yt = "https://www.youtube.com"
@@ -188,4 +189,33 @@ def ytdlv(message,client):
 	except:
 		sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='baixando: {}'.format(title)).message_id
 	nome = title
-	exec_thread(download,message,client,sent_id,text,msg_id,nome)
+	from pytube import YouTube 
+	SAVE_PATH = "tmp/"
+	try: 
+		yt = YouTube(text) 
+	except Exception as e:
+        	client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e))
+		print("Connection Error") 
+		yt.streams.filter(progressive=True).all()
+		yt.register_on_progress_callback(show_progress_bar)
+		fn = yt.streams.first()
+		try: 
+			print(fn)
+			fn.download(SAVE_PATH)
+		except Exception as e:
+        		client.send_photo(message.chat.id,'yt.png' ,caption='An error Occuredsss0\n\n' + str(e))
+
+	client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(title))
+	try:
+		client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
+		sent = client.send_document(message.chat.id, SAVE_PATH, caption=title,reply_to_message_id=msg_id).message_id
+		t2 = time.time()
+		client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
+		client.delete_messages(message.chat.id, sent_id)
+	except Exception as error:
+		client.edit_message_caption(message.chat.id, sent_id,'não foi possiviel enviar')
+		print(error)
+		client.send_chat_action(message.chat.id,'CANCEL')
+		
+		
+		
