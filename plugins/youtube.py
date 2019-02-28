@@ -187,10 +187,10 @@ def ytdlv(message,client):
         print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
         try:
             sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
-            yt = YouTube(link).streams.filter(subtype='mp4', progressive=True).first()
-            file_name = ud.unidecode(YouTube(link).title.replace(" ", "_").replace(".", "-"))
+            yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
+            file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-"))
 
-            print("Downloading..." + YouTube(link).title)
+            print("Downloading..." + YouTube(text).title)
             yt.download(SAVE_PATH, filename=file_name)
             client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(title))
             final = SAVE_PATH + '{}.mp4'.format(file_name)
