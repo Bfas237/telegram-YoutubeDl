@@ -12,7 +12,7 @@ from config import Config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
 import youtube_dl
-
+import unidecode as ud
 import pyrogram
 
 ydl = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
