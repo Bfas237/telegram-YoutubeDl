@@ -1,3 +1,8 @@
+import subprocess
+import math
+import requests
+import os, io, re, sys
+import json
 import requests
 import subprocess
 import os
@@ -6,7 +11,7 @@ import time
 from config import Config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
-
+import youtube_dl
 
 ydl = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
 
