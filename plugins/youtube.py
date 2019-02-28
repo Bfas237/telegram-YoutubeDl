@@ -183,7 +183,7 @@ def ytdlv(message,client):
         text = a['bot_api_yt'][0]['url']
         title = a['bot_api_yt'][0]['title']
         thumb = text.split('v=')[1]
-    client.delete_messages(message.chat.id, sent_id)
+        client.delete_messages(message.chat.id, sent_id)
     print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
     try:
         sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='baixando: {}'.format(title)).message_id
