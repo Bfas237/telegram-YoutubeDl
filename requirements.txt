@@ -5,7 +5,7 @@ Pillow
 hachoir
 ffmpeg-python
 logger
-pget 
+unidecode 
 python-magic
 requests
 bs4
