@@ -61,7 +61,7 @@ youtube-dl '{}'""".format(text))[1]
         if '[download] ' in i:
             if '.mp4' in i or '.webm' in i:
                 title = i
-        title = title.replace('[download] ','')
+    title = title.replace('[download] ','')
     if ' has already been downloaded' in title:
         title = title.replace(' has already been downloaded','')
     if 'Destination: ' in title:
@@ -187,17 +187,15 @@ def ytdlv(message,client):
         print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
         try:
             sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
-            yt = YouTube(text)
-            yt.streams.filter(progressive=True).all()
-            yt.register_on_progress_callback(show_progress_bar)
-            fn = yt.streams.first()
+            yt = YouTube(link).streams.filter(subtype='mp4', progressive=True).first()
+            file_name = ud.unidecode(YouTube(link).title.replace(" ", "_").replace(".", "-"))
 
-            print(fn)
-            fn.download(SAVE_PATH)
+            print("Downloading..." + YouTube(link).title)
+            yt.download(SAVE_PATH, filename=file_name)
             client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(title))
-
+            final = SAVE_PATH + '{}.mp4'.format(file_name)
             client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
-            sent = client.send_document(message.chat.id, open(tmp + '{}.mp4'.format(title), 'rb'), caption=title,reply_to_message_id=msg_id).message_id
+            sent = client.send_document(message.chat.id, final, caption=title,reply_to_message_id=msg_id).message_id
             t2 = time.time()
             client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
             client.delete_messages(message.chat.id, sent_id)
