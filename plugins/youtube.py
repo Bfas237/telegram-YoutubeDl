@@ -192,6 +192,7 @@ def ytdlv(message,client):
         thumbnail_image = 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
     try:
         file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-").replace("|", "_").replace("?", "-"))
+        file_name = file_name.strip()
         download_directory = ud.unidecode(SAVE_PATH + '{}.mp4'.format(file_name))
         sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
         yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
