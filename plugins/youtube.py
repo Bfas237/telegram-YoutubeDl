@@ -61,7 +61,7 @@ youtube-dl '{}'""".format(text))[1]
         if '[download] ' in i:
             if '.mp4' in i or '.webm' in i:
                 title = i
-    title = title.replace('[download] ','')
+        title = title.replace('[download] ','')
     if ' has already been downloaded' in title:
         title = title.replace(' has already been downloaded','')
     if 'Destination: ' in title:
@@ -197,7 +197,7 @@ def ytdlv(message,client):
             client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(title))
 
             client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
-            sent = client.send_document(message.chat.id, SAVE_PATH, caption=title,reply_to_message_id=msg_id).message_id
+            sent = client.send_document(message.chat.id, open(tmp + '{}.mp4'.format(title), 'rb'), caption=title,reply_to_message_id=msg_id).message_id
             t2 = time.time()
             client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
             client.delete_messages(message.chat.id, sent_id)
