@@ -1,7 +1,6 @@
 from pyrogram import Client, Filters
 import config
 import time
-import urbandict as ud
 import sys, os, re, sys
 import warnings, random
 from random import randint
@@ -130,59 +129,3 @@ def move(client, message):
       exec_thread(audio.audio,message,client)
   if message.text.startswith('/vid') or message.text.startswith('!vid'):
       exec_thread(youtube.ytdlv,message,client)
-  if message.text.startswith('/apk') or message.text.startswith('!apk'):
-      first_time = time.time()
-      word = message.text[4:]
-      search = " ".join(word)
-      if word == '':
-        client.send_message(message.chat.id,'**Usage:** `!apk name or package name`', reply_to_message_id=message.message_id)
-      else: 
-        sent = client.send_message(message.chat.id, fetching_download_link.format(search), reply_to_message_id=message.message_id).message_id 
-        ress = requests.get('https://apkpure.com/search?q={}&region='.format(quote_plus(search)), headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'}).text 
-        APPS = []
-        soups = BeautifulSoup(ress, "html.parser")
-        for i in soups.find('div', {'id': 'search-res'}).findAll('dl', {'class': 'search-dl'}):
-          app = i.find('p', {'class': 'search-title'}).find('a')
-          app_url = 'https://apkpure.com' + app['href']
-          APPS.append((app.text,
-                     i.findAll('p')[1].find('a').text,
-                     'https://apkpure.com' + app['href']))
-        rnd = "123456789abcdefgh-_"
-        servers = shuffle(rnd)
-        time.sleep(10)
-      
-        if len(APPS) > 0:
-          client.edit_message_text(message.chat.id, sent, download_job_started.format(servers, APPS[00][2]))
-        link = APPS[00][2]
-        time.sleep(5)
-        res = requests.get(link + '/download?from=details', headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'}).text
-        soup = BeautifulSoup(res, "html.parser").find('a', {'id': 'download_link'})
-        if soup['href']:
-          r = requests.get(soup['href'], stream=True, allow_redirects=True, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/601.7.5 (KHTML, like Gecko) Version/9.1.2 Safari/601.7.5'})
-          required_file_name = get_filename_from_cd(r.headers.get('content-disposition'))
-          with open(required_file_name, 'wb') as apk:
-            for chunk in r.iter_content(chunk_size=1024):
-              total_length = r.headers.get('content-length')
-              dl = 0
-              total_length = int(total_length)
-              if chunk:
-                  dl += len(chunk)
-                  done = int(100 * dl / total_length)
-                  apk.write(chunk)
-                  apk.flush()
-        second_time = time.time()
-        client.edit_message_text(message.chat.id, sent, download_successfull.format(str(second_time - first_time)[:5]))
-        time.sleep(5)
-        client.edit_message_text(message.chat.id, sent, upload_job_started)
-        client.delete_messages(message.chat.id, sent)
-        client.delete_messages(message.chat.id, message.message_id)
-        t1 = time.time()
-        client.send_chat_action(message.chat.id,'UPLOAD_DOCUMENT')
-        sent = client.send_document(message.chat.id, required_file_name, caption="File Upload Sucessfull", reply_to_message_id=message.message_id).message_id
-        time.sleep(5)
-        t2 = time.time()
-        description = " " + " \r\n© Made with ❤️ by @Bfas237Bots "
-        client.edit_message_caption(message.chat.id,sent,caption='**File Size**: {}\n\n**Completed in**:  `{}` **Seconds**\n'.format(str(pretty_size(total_length)), str(int(t2-t1))))
-        time.sleep(3)
-        client.edit_message_caption(message.chat.id,sent,caption='\n{}\n'.format(description))
-        os.remove(required_file_name)
