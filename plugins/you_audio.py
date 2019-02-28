@@ -10,7 +10,10 @@ import config
 from bs4 import BeautifulSoup
 from bs4 import BeautifulSoup as bs
 import youtube_dl
-import pyrogram
+import pyrogram, requests
+
+ydl = youtube_dl.YoutubeDL({'outtmpl': 'dls/%(title)s.%(ext)s', 'format': '140', 'noplaylist': True})
+
 def exec_thread(target, *args, **kwargs):
     t = threading.Thread(target=target, args=args, kwargs=kwargs)
     t.daemon = True
