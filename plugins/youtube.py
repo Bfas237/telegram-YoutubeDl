@@ -152,6 +152,16 @@ def search_query_yt(query):
     dic = {'bot_api_yt':list_videos}
     return dic
 
+def prog(client, current, total, message_id, chat_id, required_file_name):
+ if round(current/total*100, 0) % 5 == 0:
+  try:
+   file_size = os.stat(required_file_name).st_size
+   client.send_chat_action(chat_id,'UPLOAD_DOCUMENT')
+   client.edit_message_caption(chat_id, message_id, "**⬇️ Uploading:** {}% of {}".format(round(current/total*100, 0), str(pretty_size(file_size)))
+   )
+ 
+  except:
+   pass
 def ytdlv(message,client):
     text = message.text[5:]
     chat_id = message.chat.id
@@ -184,6 +194,7 @@ def ytdlv(message,client):
         title = a['bot_api_yt'][0]['title']
         thumb = text.split('v=')[1]
         client.delete_messages(message.chat.id, sent_id)
+        thumb_image_path = 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
         print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
         try:
             sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
@@ -192,10 +203,10 @@ def ytdlv(message,client):
 
             print("Downloading..." + YouTube(text).title)
             yt.download(SAVE_PATH, filename=file_name)
-            client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(title))
+            client.edit_message_caption(message.chat.id, sent_id,'Uploading... {}'.format(title))
             final = SAVE_PATH + '{}.mp4'.format(file_name)
             client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
-            sent = client.send_document(message.chat.id, final, caption=title,reply_to_message_id=msg_id).message_id
+            sent = client.send_video(message.chat.id, video=final, caption=title,supports_streaming=True,thumb=thumb_image_path,reply_to_message_id=msg_id, progress = prog, progress_args = (sent_id, message.chat.id, final)).message_id
             t2 = time.time()
             client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
             client.delete_messages(message.chat.id, sent_id)
