@@ -8,3 +8,4 @@ logger
 pget 
 python-magic
 requests
+bs4
