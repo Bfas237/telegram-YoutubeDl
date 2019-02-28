@@ -184,22 +184,14 @@ def ytdlv(message,client):
         title = a['bot_api_yt'][0]['title']
         thumb = text.split('v=')[1]
         client.delete_messages(message.chat.id, sent_id)
-    print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
-    try:
-        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='baixando: {}'.format(title)).message_id
-    except:
-        sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='baixando: {}'.format(title)).message_id
-        nome = title
-    
-    try: 
-        yt = YouTube(text) 
-    except Exception as e:
-        client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e))
-        print("Connection Error") 
-        yt.streams.filter(progressive=True).all()
-        yt.register_on_progress_callback(show_progress_bar)
-        fn = yt.streams.first()
-        try: 
+        print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
+        try:
+            sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
+            yt = YouTube(text)
+            yt.streams.filter(progressive=True).all()
+            yt.register_on_progress_callback(show_progress_bar)
+            fn = yt.streams.first()
+
             print(fn)
             fn.download(SAVE_PATH)
             client.edit_message_caption(message.chat.id, sent_id,'Enviando {}'.format(title))
@@ -210,7 +202,6 @@ def ytdlv(message,client):
             client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
             client.delete_messages(message.chat.id, sent_id)
         except Exception as e:
-            client.send_photo(message.chat.id,'yt.png' ,caption='An error Occuredsss0\n\n' + str(e))
+            sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e)).message_id
             print(str(e))
             client.send_chat_action(message.chat.id,'CANCEL')
-
