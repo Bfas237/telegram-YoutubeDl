@@ -211,7 +211,7 @@ def ytdlv(bot,client):
                                         'Baixando <code>{}</code> do YouTube...\n({})'.format(name, pretty_size(fsize)),
                                         'HTML')
                     ydl.extract_info('https://www.youtube.com/watch?v=' + yt['id'], download=True)
-                   bot.edit_message_text((chat_id, sent_id), 'Enviando áudio...')
+                    bot.edit_message_text((chat_id, sent_id), 'Enviando áudio...')
                     bot.send_chat_action(chat_id, 'UPLOAD_DOCUMENT')
                     bot.send_audio(chat_id, open(ydl.prepare_filename(yt), 'rb'),
                                   performer=performer,
