@@ -136,7 +136,7 @@ def cytdlv(message,client):
 
 
 
-def search_yt(query):
+def search_query_yt(query):
     url_base = "https://www.youtube.com/results"
     url_yt = "https://www.youtube.com"
     r = requests.get(url_base, params=dict(search_query=query))
