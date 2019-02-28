@@ -153,7 +153,9 @@ def search_yt(query):
             list_videos.append(dic)
         else:
             pass
-    return list_videos
+
+    dic = {'bot_api_yt':list_videos}
+    return dic
 
 def ytdlv(message,client):
 	text = message.text[5:]
