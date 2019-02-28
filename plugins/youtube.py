@@ -157,6 +157,10 @@ def ytdlv(message,client):
     text = message.text[5:]
     chat_id = message.chat.id
     msg_id = message.message_id
+
+    width = 0
+    height = 0
+    duration = 0
     if text == '':
         client.send_message(
             chat_id=chat_id,
@@ -170,9 +174,10 @@ def ytdlv(message,client):
             parse_mode='Markdown',
             reply_to_message_id=msg_id
         ).message_id
-        a = search_query_yt(text)
-        title = a['bot_api_yt'][0]['title']
-        thumb = a['bot_api_yt'][0]['url'].split('v=')[1]
+        text = text
+        title = YouTube(text).title
+        thumb = text.split('v=')[1]
+        thumbnail_image = 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
     else:
         sent_id = client.send_message(
             chat_id=chat_id,
@@ -185,19 +190,16 @@ def ytdlv(message,client):
         title = a['bot_api_yt'][0]['title']
         thumb = text.split('v=')[1]
         client.delete_messages(message.chat.id, sent_id)
-        width = 0
-        height = 0
-        duration = 0
         thumbnail_image = 'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb)
-        try:
-            file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-"))
-            download_directory = ud.unidecode(SAVE_PATH + '{}.mp4'.format(file_name))
-            sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
-            yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
+    try:
+        file_name = ud.unidecode(YouTube(text).title.replace(" ", "_").replace(".", "-"))
+        download_directory = ud.unidecode(SAVE_PATH + '{}.mp4'.format(file_name))
+        sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='Downloading: {}'.format(title)).message_id
+        yt = YouTube(text).streams.filter(subtype='mp4', progressive=True).first()
 
-            print("Downloading..." + YouTube(text).title)
-            yt.download(SAVE_PATH, filename=file_name)
-            thumb_image_path = DownLoadFile(
+        print("Downloading..." + YouTube(text).title)
+        yt.download(SAVE_PATH, filename=file_name)
+        thumb_image_path = DownLoadFile(
                 thumbnail_image,
                 SAVE_PATH + str(message.from_user.id) + ".jpg",
                 8192,
@@ -207,44 +209,44 @@ def ytdlv(message,client):
                 message.chat.id
             )
 
-            print(thumbnail_image)
-            metadata = extractMetadata(createParser(download_directory))
-            if metadata.has("duration"):
-                duration = metadata.get('duration').seconds
-            if os.path.exists(thumb_image_path):
-                width = 0
-                height = 0
-                metadata = extractMetadata(createParser(thumb_image_path))
-                if metadata.has("width"):
-                    width = metadata.get("width")
-                if metadata.has("height"):
-                    height = metadata.get("height")
+        print(thumbnail_image)
+        metadata = extractMetadata(createParser(download_directory))
+        if metadata.has("duration"):
+            duration = metadata.get('duration').seconds
+        if os.path.exists(thumb_image_path):
+            width = 0
+            height = 0
+            metadata = extractMetadata(createParser(thumb_image_path))
+            if metadata.has("width"):
+                width = metadata.get("width")
+            if metadata.has("height"):
+                height = metadata.get("height")
                 # resize image
                 # ref: https://t.me/PyrogramChat/44663
                 # https://stackoverflow.com/a/21669827/4723940
-                Image.open(thumb_image_path).convert(
+            Image.open(thumb_image_path).convert(
                     "RGB").save(thumb_image_path)
-                img = Image.open(thumb_image_path)
+            img = Image.open(thumb_image_path)
                 # https://stackoverflow.com/a/37631799/4723940
-                img.thumbnail((90, 90))
-                img.save(thumb_image_path, "JPEG")
+            img.thumbnail((90, 90))
+            img.save(thumb_image_path, "JPEG")
                 # https://pillow.readthedocs.io/en/3.1.x/reference/Image.html#create-thumbnails
-            else:
-                thumb_image_path = None
-            client.edit_message_caption(message.chat.id, sent_id,'Uploading... {}'.format(title))
-            final = SAVE_PATH + '{}.mp4'.format(file_name)
-            client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
-            sent = client.send_video(message.chat.id, video=final, caption=title,duration=duration,width=width,height=height,supports_streaming=True,thumb=thumb_image_path,reply_to_message_id=msg_id, progress = prog, progress_args = (sent_id, message.chat.id, final)).message_id
-            t2 = time.time()
-            client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
-            client.delete_messages(message.chat.id, sent_id)
+        else:
+            thumb_image_path = None
+        client.edit_message_caption(message.chat.id, sent_id,'Uploading... {}'.format(title))
+        final = SAVE_PATH + '{}.mp4'.format(file_name)
+        client.send_chat_action(message.chat.id,'UPLOAD_VIDEO')
+        sent = client.send_video(message.chat.id, video=final, caption=title,duration=duration,width=width,height=height,supports_streaming=True,thumb=thumb_image_path,reply_to_message_id=msg_id, progress = prog, progress_args = (sent_id, message.chat.id, final)).message_id
+        t2 = time.time()
+        client.edit_message_caption(message.chat.id,sent,caption='{}\n\n© Made with ❤️ by @Bfas237Bots'.format(title))
+        client.delete_messages(message.chat.id, sent_id)
 
-        except Exception as e:
-            sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e)).message_id
-            print(str(e))
-            client.send_chat_action(message.chat.id,'CANCEL')
-        try:
-            os.remove(download_directory)
-            os.remove(thumb_image_path)
-        except:
-            pass
+    except Exception as e:
+        sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e)).message_id
+        print(str(e))
+        client.send_chat_action(message.chat.id,'CANCEL')
+    try:
+        os.remove(download_directory)
+        os.remove(thumb_image_path)
+    except:
+        pass
