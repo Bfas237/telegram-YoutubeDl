@@ -121,7 +121,7 @@ def ytdlv(message,client):
         print('https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb))
     try:
         sent_id = client.send_photo(message.chat.id,'https://i.ytimg.com/vi/{}/hqdefault.jpg'.format(thumb) ,caption='**Downloading:** `{}`'.format(title)).message_id
-    exceptt Exception as e:
+    except Exception as e:
         sent_id = client.send_photo(message.chat.id,'yt.png' ,caption='An error Occured\n\n' + str(e)).message_id
     nome = title
     time.sleep(2)
