@@ -10,3 +10,4 @@ python-magic
 requests
 bs4
 pyaxmlparser
+pytube
